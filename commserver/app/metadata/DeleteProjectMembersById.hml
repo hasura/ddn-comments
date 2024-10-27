@@ -1,0 +1,72 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: DeleteProjectMembersByIdResponse
+  description: Responses from the 'delete_project_members_by_id' procedure
+  fields:
+    - name: affectedRows
+      type: Int4!
+      description: The number of rows affected by the mutation
+    - name: returning
+      type: "[ProjectMembers!]!"
+      description: Data from rows affected by the mutation
+  graphql:
+    typeName: DeleteProjectMembersByIdResponse
+    inputTypeName: DeleteProjectMembersByIdResponseInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: delete_project_members_by_id_response
+      fieldMapping:
+        affectedRows:
+          column:
+            name: affected_rows
+        returning:
+          column:
+            name: returning
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: DeleteProjectMembersByIdResponse
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - affectedRows
+          - returning
+
+---
+kind: Command
+version: v1
+definition:
+  name: DeleteProjectMembersById
+  outputType: DeleteProjectMembersByIdResponse!
+  arguments:
+    - name: keyId
+      type: Uuid!
+    - name: preCheck
+      type: ProjectMembersBoolExp
+      description: Delete permission predicate over the 'project_members' collection
+  source:
+    dataConnectorName: my_connector
+    dataConnectorCommand:
+      procedure: delete_project_members_by_id
+    argumentMapping:
+      keyId: key_id
+      preCheck: pre_check
+  graphql:
+    rootFieldName: deleteProjectMembersById
+    rootFieldKind: Mutation
+  description: Delete any row on the 'project_members' collection using the 'id' key
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: DeleteProjectMembersById
+  permissions:
+    - role: admin
+      allowExecution: true
+

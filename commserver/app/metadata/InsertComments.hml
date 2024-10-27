@@ -1,0 +1,138 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: InsertCommentsObject
+  fields:
+    - name: body
+      type: Jsonb!
+    - name: createdAt
+      type: Timestamptz
+    - name: deletedAt
+      type: Timestamptz
+    - name: id
+      type: Uuid!
+    - name: threadId
+      type: Uuid!
+    - name: updatedAt
+      type: Timestamptz
+    - name: userId
+      type: Uuid
+  graphql:
+    typeName: InsertCommentsObject
+    inputTypeName: InsertCommentsObjectInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: insert_comments_object
+      fieldMapping:
+        body:
+          column:
+            name: body
+        createdAt:
+          column:
+            name: created_at
+        deletedAt:
+          column:
+            name: deleted_at
+        id:
+          column:
+            name: id
+        threadId:
+          column:
+            name: thread_id
+        updatedAt:
+          column:
+            name: updated_at
+        userId:
+          column:
+            name: user_id
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: InsertCommentsObject
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - body
+          - createdAt
+          - deletedAt
+          - id
+          - threadId
+          - updatedAt
+          - userId
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: InsertCommentsResponse
+  description: Responses from the 'insert_comments' procedure
+  fields:
+    - name: affectedRows
+      type: Int4!
+      description: The number of rows affected by the mutation
+    - name: returning
+      type: "[Comments!]!"
+      description: Data from rows affected by the mutation
+  graphql:
+    typeName: InsertCommentsResponse
+    inputTypeName: InsertCommentsResponseInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: insert_comments_response
+      fieldMapping:
+        affectedRows:
+          column:
+            name: affected_rows
+        returning:
+          column:
+            name: returning
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: InsertCommentsResponse
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - affectedRows
+          - returning
+
+---
+kind: Command
+version: v1
+definition:
+  name: InsertComments
+  outputType: InsertCommentsResponse!
+  arguments:
+    - name: objects
+      type: "[InsertCommentsObject!]!"
+    - name: postCheck
+      type: CommentsBoolExp
+      description: Insert permission predicate over the 'comments' collection
+  source:
+    dataConnectorName: my_connector
+    dataConnectorCommand:
+      procedure: insert_comments
+    argumentMapping:
+      objects: objects
+      postCheck: post_check
+  graphql:
+    rootFieldName: insertComments
+    rootFieldKind: Mutation
+  description: Insert into the comments table
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: InsertComments
+  permissions:
+    - role: admin
+      allowExecution: true
+

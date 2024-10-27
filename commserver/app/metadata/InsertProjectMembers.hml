@@ -1,0 +1,126 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: InsertProjectMembersObject
+  fields:
+    - name: createdAt
+      type: Timestamptz
+    - name: id
+      type: Uuid!
+    - name: projectId
+      type: Uuid!
+    - name: role
+      type: Varchar!
+    - name: userId
+      type: Uuid!
+  graphql:
+    typeName: InsertProjectMembersObject
+    inputTypeName: InsertProjectMembersObjectInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: insert_project_members_object
+      fieldMapping:
+        createdAt:
+          column:
+            name: created_at
+        id:
+          column:
+            name: id
+        projectId:
+          column:
+            name: project_id
+        role:
+          column:
+            name: role
+        userId:
+          column:
+            name: user_id
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: InsertProjectMembersObject
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - createdAt
+          - id
+          - projectId
+          - role
+          - userId
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: InsertProjectMembersResponse
+  description: Responses from the 'insert_project_members' procedure
+  fields:
+    - name: affectedRows
+      type: Int4!
+      description: The number of rows affected by the mutation
+    - name: returning
+      type: "[ProjectMembers!]!"
+      description: Data from rows affected by the mutation
+  graphql:
+    typeName: InsertProjectMembersResponse
+    inputTypeName: InsertProjectMembersResponseInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: insert_project_members_response
+      fieldMapping:
+        affectedRows:
+          column:
+            name: affected_rows
+        returning:
+          column:
+            name: returning
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: InsertProjectMembersResponse
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - affectedRows
+          - returning
+
+---
+kind: Command
+version: v1
+definition:
+  name: InsertProjectMembers
+  outputType: InsertProjectMembersResponse!
+  arguments:
+    - name: objects
+      type: "[InsertProjectMembersObject!]!"
+    - name: postCheck
+      type: ProjectMembersBoolExp
+      description: Insert permission predicate over the 'project_members' collection
+  source:
+    dataConnectorName: my_connector
+    dataConnectorCommand:
+      procedure: insert_project_members
+    argumentMapping:
+      objects: objects
+      postCheck: post_check
+  graphql:
+    rootFieldName: insertProjectMembers
+    rootFieldKind: Mutation
+  description: Insert into the project_members table
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: InsertProjectMembers
+  permissions:
+    - role: admin
+      allowExecution: true
+

@@ -1,0 +1,150 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateThreadsByProjectIdAndThreadKeyUpdateColumns
+  description: Update the columns of the 'threads' collection
+  fields:
+    - name: createdAt
+      type: UpdateColumnThreadsCreatedAt
+      description: Update the 'created_at' column in the 'threads' collection.
+    - name: id
+      type: UpdateColumnThreadsId
+      description: Update the 'id' column in the 'threads' collection.
+    - name: metadata
+      type: UpdateColumnThreadsMetadata
+      description: Update the 'metadata' column in the 'threads' collection.
+    - name: projectId
+      type: UpdateColumnThreadsProjectId
+      description: Update the 'project_id' column in the 'threads' collection.
+    - name: resolved
+      type: UpdateColumnThreadsResolved
+      description: Update the 'resolved' column in the 'threads' collection.
+    - name: threadKey
+      type: UpdateColumnThreadsThreadKey
+      description: Update the 'thread_key' column in the 'threads' collection.
+  graphql:
+    typeName: UpdateThreadsByProjectIdAndThreadKeyUpdateColumns
+    inputTypeName: UpdateThreadsByProjectIdAndThreadKeyUpdateColumnsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: update_threads_by_project_id_and_thread_key_update_columns
+      fieldMapping:
+        createdAt:
+          column:
+            name: created_at
+        id:
+          column:
+            name: id
+        metadata:
+          column:
+            name: metadata
+        projectId:
+          column:
+            name: project_id
+        resolved:
+          column:
+            name: resolved
+        threadKey:
+          column:
+            name: thread_key
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateThreadsByProjectIdAndThreadKeyUpdateColumns
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - createdAt
+          - id
+          - metadata
+          - projectId
+          - resolved
+          - threadKey
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateThreadsByProjectIdAndThreadKeyResponse
+  description: Responses from the 'update_threads_by_project_id_and_thread_key' procedure
+  fields:
+    - name: affectedRows
+      type: Int4!
+      description: The number of rows affected by the mutation
+    - name: returning
+      type: "[Threads!]!"
+      description: Data from rows affected by the mutation
+  graphql:
+    typeName: UpdateThreadsByProjectIdAndThreadKeyResponse
+    inputTypeName: UpdateThreadsByProjectIdAndThreadKeyResponseInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: update_threads_by_project_id_and_thread_key_response
+      fieldMapping:
+        affectedRows:
+          column:
+            name: affected_rows
+        returning:
+          column:
+            name: returning
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateThreadsByProjectIdAndThreadKeyResponse
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - affectedRows
+          - returning
+
+---
+kind: Command
+version: v1
+definition:
+  name: UpdateThreadsByProjectIdAndThreadKey
+  outputType: UpdateThreadsByProjectIdAndThreadKeyResponse!
+  arguments:
+    - name: keyProjectId
+      type: Uuid!
+    - name: keyThreadKey
+      type: Varchar!
+    - name: postCheck
+      type: ThreadsBoolExp
+      description: Update permission post-condition predicate over the 'threads' collection
+    - name: preCheck
+      type: ThreadsBoolExp
+      description: Update permission pre-condition predicate over the 'threads' collection
+    - name: updateColumns
+      type: UpdateThreadsByProjectIdAndThreadKeyUpdateColumns!
+  source:
+    dataConnectorName: my_connector
+    dataConnectorCommand:
+      procedure: update_threads_by_project_id_and_thread_key
+    argumentMapping:
+      keyProjectId: key_project_id
+      keyThreadKey: key_thread_key
+      postCheck: post_check
+      preCheck: pre_check
+      updateColumns: update_columns
+  graphql:
+    rootFieldName: updateThreadsByProjectIdAndThreadKey
+    rootFieldKind: Mutation
+  description: Update any row on the 'threads' collection using the 'project_id'
+    and 'thread_key' keys
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: UpdateThreadsByProjectIdAndThreadKey
+  permissions:
+    - role: admin
+      allowExecution: true
+

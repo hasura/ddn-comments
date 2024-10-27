@@ -1,0 +1,72 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: DeleteNotificationsByIdResponse
+  description: Responses from the 'delete_notifications_by_id' procedure
+  fields:
+    - name: affectedRows
+      type: Int4!
+      description: The number of rows affected by the mutation
+    - name: returning
+      type: "[Notifications!]!"
+      description: Data from rows affected by the mutation
+  graphql:
+    typeName: DeleteNotificationsByIdResponse
+    inputTypeName: DeleteNotificationsByIdResponseInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: delete_notifications_by_id_response
+      fieldMapping:
+        affectedRows:
+          column:
+            name: affected_rows
+        returning:
+          column:
+            name: returning
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: DeleteNotificationsByIdResponse
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - affectedRows
+          - returning
+
+---
+kind: Command
+version: v1
+definition:
+  name: DeleteNotificationsById
+  outputType: DeleteNotificationsByIdResponse!
+  arguments:
+    - name: keyId
+      type: Uuid!
+    - name: preCheck
+      type: NotificationsBoolExp
+      description: Delete permission predicate over the 'notifications' collection
+  source:
+    dataConnectorName: my_connector
+    dataConnectorCommand:
+      procedure: delete_notifications_by_id
+    argumentMapping:
+      keyId: key_id
+      preCheck: pre_check
+  graphql:
+    rootFieldName: deleteNotificationsById
+    rootFieldKind: Mutation
+  description: Delete any row on the 'notifications' collection using the 'id' key
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: DeleteNotificationsById
+  permissions:
+    - role: admin
+      allowExecution: true
+

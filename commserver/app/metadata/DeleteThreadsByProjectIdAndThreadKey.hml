@@ -1,0 +1,76 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: DeleteThreadsByProjectIdAndThreadKeyResponse
+  description: Responses from the 'delete_threads_by_project_id_and_thread_key' procedure
+  fields:
+    - name: affectedRows
+      type: Int4!
+      description: The number of rows affected by the mutation
+    - name: returning
+      type: "[Threads!]!"
+      description: Data from rows affected by the mutation
+  graphql:
+    typeName: DeleteThreadsByProjectIdAndThreadKeyResponse
+    inputTypeName: DeleteThreadsByProjectIdAndThreadKeyResponseInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: delete_threads_by_project_id_and_thread_key_response
+      fieldMapping:
+        affectedRows:
+          column:
+            name: affected_rows
+        returning:
+          column:
+            name: returning
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: DeleteThreadsByProjectIdAndThreadKeyResponse
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - affectedRows
+          - returning
+
+---
+kind: Command
+version: v1
+definition:
+  name: DeleteThreadsByProjectIdAndThreadKey
+  outputType: DeleteThreadsByProjectIdAndThreadKeyResponse!
+  arguments:
+    - name: keyProjectId
+      type: Uuid!
+    - name: keyThreadKey
+      type: Varchar!
+    - name: preCheck
+      type: ThreadsBoolExp
+      description: Delete permission predicate over the 'threads' collection
+  source:
+    dataConnectorName: my_connector
+    dataConnectorCommand:
+      procedure: delete_threads_by_project_id_and_thread_key
+    argumentMapping:
+      keyProjectId: key_project_id
+      keyThreadKey: key_thread_key
+      preCheck: pre_check
+  graphql:
+    rootFieldName: deleteThreadsByProjectIdAndThreadKey
+    rootFieldKind: Mutation
+  description: Delete any row on the 'threads' collection using the 'project_id'
+    and 'thread_key' keys
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: DeleteThreadsByProjectIdAndThreadKey
+  permissions:
+    - role: admin
+      allowExecution: true
+

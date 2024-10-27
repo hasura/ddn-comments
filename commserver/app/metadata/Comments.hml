@@ -1,0 +1,264 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Comments
+  fields:
+    - name: body
+      type: Jsonb!
+    - name: createdAt
+      type: Timestamptz
+    - name: deletedAt
+      type: Timestamptz
+    - name: id
+      type: Uuid!
+    - name: threadId
+      type: Uuid!
+    - name: updatedAt
+      type: Timestamptz
+    - name: userId
+      type: Uuid
+  graphql:
+    typeName: Comments
+    inputTypeName: CommentsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: comments
+      fieldMapping:
+        body:
+          column:
+            name: body
+        createdAt:
+          column:
+            name: created_at
+        deletedAt:
+          column:
+            name: deleted_at
+        id:
+          column:
+            name: id
+        threadId:
+          column:
+            name: thread_id
+        updatedAt:
+          column:
+            name: updated_at
+        userId:
+          column:
+            name: user_id
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Comments
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - body
+          - createdAt
+          - deletedAt
+          - id
+          - threadId
+          - updatedAt
+          - userId
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: CommentsBoolExp
+  operand:
+    object:
+      type: Comments
+      comparableFields:
+        - fieldName: body
+          booleanExpressionType: JsonbBoolExp
+        - fieldName: createdAt
+          booleanExpressionType: TimestamptzBoolExp
+        - fieldName: deletedAt
+          booleanExpressionType: TimestamptzBoolExp
+        - fieldName: id
+          booleanExpressionType: UuidBoolExp
+        - fieldName: threadId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: updatedAt
+          booleanExpressionType: TimestamptzBoolExp
+        - fieldName: userId
+          booleanExpressionType: UuidBoolExp
+      comparableRelationships:
+        - relationshipName: thread
+        - relationshipName: user
+        - relationshipName: mentions
+        - relationshipName: notifications
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: CommentsBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: CommentsAggExp
+  operand:
+    object:
+      aggregatedType: Comments
+      aggregatableFields:
+        - fieldName: body
+          aggregateExpression: JsonbAggExp
+        - fieldName: createdAt
+          aggregateExpression: TimestamptzAggExp
+        - fieldName: deletedAt
+          aggregateExpression: TimestamptzAggExp
+        - fieldName: id
+          aggregateExpression: UuidAggExp
+        - fieldName: threadId
+          aggregateExpression: UuidAggExp
+        - fieldName: updatedAt
+          aggregateExpression: TimestamptzAggExp
+        - fieldName: userId
+          aggregateExpression: UuidAggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: CommentsAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: Comments
+  objectType: Comments
+  source:
+    dataConnectorName: my_connector
+    collection: comments
+  filterExpressionType: CommentsBoolExp
+  aggregateExpression: CommentsAggExp
+  orderableFields:
+    - fieldName: body
+      orderByDirections:
+        enableAll: true
+    - fieldName: createdAt
+      orderByDirections:
+        enableAll: true
+    - fieldName: deletedAt
+      orderByDirections:
+        enableAll: true
+    - fieldName: id
+      orderByDirections:
+        enableAll: true
+    - fieldName: threadId
+      orderByDirections:
+        enableAll: true
+    - fieldName: updatedAt
+      orderByDirections:
+        enableAll: true
+    - fieldName: userId
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: comments
+    selectUniques:
+      - queryRootField: commentsById
+        uniqueIdentifier:
+          - id
+    orderByExpressionType: CommentsOrderBy
+    filterInputTypeName: CommentsFilterInput
+    aggregate:
+      queryRootField: commentsAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Comments
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: thread
+  sourceType: Comments
+  target:
+    model:
+      name: Threads
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: threadId
+      target:
+        modelField:
+          - fieldName: id
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: user
+  sourceType: Comments
+  target:
+    model:
+      name: Users
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: userId
+      target:
+        modelField:
+          - fieldName: id
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: mentions
+  sourceType: Comments
+  target:
+    model:
+      name: Mentions
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: MentionsAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: id
+      target:
+        modelField:
+          - fieldName: commentId
+  graphql:
+    aggregateFieldName: mentionsAggregate
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: notifications
+  sourceType: Comments
+  target:
+    model:
+      name: Notifications
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: NotificationsAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: id
+      target:
+        modelField:
+          - fieldName: commentId
+  graphql:
+    aggregateFieldName: notificationsAggregate
+

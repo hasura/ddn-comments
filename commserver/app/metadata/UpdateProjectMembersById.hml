@@ -1,0 +1,301 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateColumnProjectMembersCreatedAt
+  description: Update the 'created_at' column in the 'project_members' collection
+  fields:
+    - name: set
+      type: Timestamptz
+      description: Set the column to this value
+  graphql:
+    typeName: UpdateColumnProjectMembersCreatedAt
+    inputTypeName: UpdateColumnProjectMembersCreatedAtInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: update_column_project_members_created_at
+      fieldMapping:
+        set:
+          column:
+            name: _set
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateColumnProjectMembersCreatedAt
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - set
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateColumnProjectMembersId
+  description: Update the 'id' column in the 'project_members' collection
+  fields:
+    - name: set
+      type: Uuid!
+      description: Set the column to this value
+  graphql:
+    typeName: UpdateColumnProjectMembersId
+    inputTypeName: UpdateColumnProjectMembersIdInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: update_column_project_members_id
+      fieldMapping:
+        set:
+          column:
+            name: _set
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateColumnProjectMembersId
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - set
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateColumnProjectMembersProjectId
+  description: Update the 'project_id' column in the 'project_members' collection
+  fields:
+    - name: set
+      type: Uuid!
+      description: Set the column to this value
+  graphql:
+    typeName: UpdateColumnProjectMembersProjectId
+    inputTypeName: UpdateColumnProjectMembersProjectIdInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: update_column_project_members_project_id
+      fieldMapping:
+        set:
+          column:
+            name: _set
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateColumnProjectMembersProjectId
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - set
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateColumnProjectMembersRole
+  description: Update the 'role' column in the 'project_members' collection
+  fields:
+    - name: set
+      type: Varchar!
+      description: Set the column to this value
+  graphql:
+    typeName: UpdateColumnProjectMembersRole
+    inputTypeName: UpdateColumnProjectMembersRoleInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: update_column_project_members_role
+      fieldMapping:
+        set:
+          column:
+            name: _set
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateColumnProjectMembersRole
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - set
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateColumnProjectMembersUserId
+  description: Update the 'user_id' column in the 'project_members' collection
+  fields:
+    - name: set
+      type: Uuid!
+      description: Set the column to this value
+  graphql:
+    typeName: UpdateColumnProjectMembersUserId
+    inputTypeName: UpdateColumnProjectMembersUserIdInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: update_column_project_members_user_id
+      fieldMapping:
+        set:
+          column:
+            name: _set
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateColumnProjectMembersUserId
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - set
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateProjectMembersByIdUpdateColumns
+  description: Update the columns of the 'project_members' collection
+  fields:
+    - name: createdAt
+      type: UpdateColumnProjectMembersCreatedAt
+      description: Update the 'created_at' column in the 'project_members' collection.
+    - name: id
+      type: UpdateColumnProjectMembersId
+      description: Update the 'id' column in the 'project_members' collection.
+    - name: projectId
+      type: UpdateColumnProjectMembersProjectId
+      description: Update the 'project_id' column in the 'project_members' collection.
+    - name: role
+      type: UpdateColumnProjectMembersRole
+      description: Update the 'role' column in the 'project_members' collection.
+    - name: userId
+      type: UpdateColumnProjectMembersUserId
+      description: Update the 'user_id' column in the 'project_members' collection.
+  graphql:
+    typeName: UpdateProjectMembersByIdUpdateColumns
+    inputTypeName: UpdateProjectMembersByIdUpdateColumnsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: update_project_members_by_id_update_columns
+      fieldMapping:
+        createdAt:
+          column:
+            name: created_at
+        id:
+          column:
+            name: id
+        projectId:
+          column:
+            name: project_id
+        role:
+          column:
+            name: role
+        userId:
+          column:
+            name: user_id
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateProjectMembersByIdUpdateColumns
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - createdAt
+          - id
+          - projectId
+          - role
+          - userId
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateProjectMembersByIdResponse
+  description: Responses from the 'update_project_members_by_id' procedure
+  fields:
+    - name: affectedRows
+      type: Int4!
+      description: The number of rows affected by the mutation
+    - name: returning
+      type: "[ProjectMembers!]!"
+      description: Data from rows affected by the mutation
+  graphql:
+    typeName: UpdateProjectMembersByIdResponse
+    inputTypeName: UpdateProjectMembersByIdResponseInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: update_project_members_by_id_response
+      fieldMapping:
+        affectedRows:
+          column:
+            name: affected_rows
+        returning:
+          column:
+            name: returning
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateProjectMembersByIdResponse
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - affectedRows
+          - returning
+
+---
+kind: Command
+version: v1
+definition:
+  name: UpdateProjectMembersById
+  outputType: UpdateProjectMembersByIdResponse!
+  arguments:
+    - name: keyId
+      type: Uuid!
+    - name: postCheck
+      type: ProjectMembersBoolExp
+      description: Update permission post-condition predicate over the
+        'project_members' collection
+    - name: preCheck
+      type: ProjectMembersBoolExp
+      description: Update permission pre-condition predicate over the
+        'project_members' collection
+    - name: updateColumns
+      type: UpdateProjectMembersByIdUpdateColumns!
+  source:
+    dataConnectorName: my_connector
+    dataConnectorCommand:
+      procedure: update_project_members_by_id
+    argumentMapping:
+      keyId: key_id
+      postCheck: post_check
+      preCheck: pre_check
+      updateColumns: update_columns
+  graphql:
+    rootFieldName: updateProjectMembersById
+    rootFieldKind: Mutation
+  description: Update any row on the 'project_members' collection using the 'id' key
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: UpdateProjectMembersById
+  permissions:
+    - role: admin
+      allowExecution: true
+

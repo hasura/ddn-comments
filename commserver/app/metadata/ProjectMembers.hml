@@ -1,0 +1,196 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: ProjectMembers
+  fields:
+    - name: createdAt
+      type: Timestamptz
+    - name: id
+      type: Uuid!
+    - name: projectId
+      type: Uuid!
+    - name: role
+      type: Varchar!
+    - name: userId
+      type: Uuid!
+  graphql:
+    typeName: ProjectMembers
+    inputTypeName: ProjectMembersInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: project_members
+      fieldMapping:
+        createdAt:
+          column:
+            name: created_at
+        id:
+          column:
+            name: id
+        projectId:
+          column:
+            name: project_id
+        role:
+          column:
+            name: role
+        userId:
+          column:
+            name: user_id
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: ProjectMembers
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - createdAt
+          - id
+          - projectId
+          - role
+          - userId
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: ProjectMembersBoolExp
+  operand:
+    object:
+      type: ProjectMembers
+      comparableFields:
+        - fieldName: createdAt
+          booleanExpressionType: TimestamptzBoolExp
+        - fieldName: id
+          booleanExpressionType: UuidBoolExp
+        - fieldName: projectId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: role
+          booleanExpressionType: VarcharBoolExp
+        - fieldName: userId
+          booleanExpressionType: UuidBoolExp
+      comparableRelationships:
+        - relationshipName: project
+        - relationshipName: user
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: ProjectMembersBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: ProjectMembersAggExp
+  operand:
+    object:
+      aggregatedType: ProjectMembers
+      aggregatableFields:
+        - fieldName: createdAt
+          aggregateExpression: TimestamptzAggExp
+        - fieldName: id
+          aggregateExpression: UuidAggExp
+        - fieldName: projectId
+          aggregateExpression: UuidAggExp
+        - fieldName: role
+          aggregateExpression: VarcharAggExp
+        - fieldName: userId
+          aggregateExpression: UuidAggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: ProjectMembersAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: ProjectMembers
+  objectType: ProjectMembers
+  source:
+    dataConnectorName: my_connector
+    collection: project_members
+  filterExpressionType: ProjectMembersBoolExp
+  aggregateExpression: ProjectMembersAggExp
+  orderableFields:
+    - fieldName: createdAt
+      orderByDirections:
+        enableAll: true
+    - fieldName: id
+      orderByDirections:
+        enableAll: true
+    - fieldName: projectId
+      orderByDirections:
+        enableAll: true
+    - fieldName: role
+      orderByDirections:
+        enableAll: true
+    - fieldName: userId
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: projectMembers
+    selectUniques:
+      - queryRootField: projectMembersById
+        uniqueIdentifier:
+          - id
+      - queryRootField: projectMembersByProjectMembersProjectIdUserIdKey
+        uniqueIdentifier:
+          - projectId
+          - userId
+    orderByExpressionType: ProjectMembersOrderBy
+    filterInputTypeName: ProjectMembersFilterInput
+    aggregate:
+      queryRootField: projectMembersAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: ProjectMembers
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: project
+  sourceType: ProjectMembers
+  target:
+    model:
+      name: Projects
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: projectId
+      target:
+        modelField:
+          - fieldName: id
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: user
+  sourceType: ProjectMembers
+  target:
+    model:
+      name: Users
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: userId
+      target:
+        modelField:
+          - fieldName: id
+

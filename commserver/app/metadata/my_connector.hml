@@ -1,0 +1,2543 @@
+kind: DataConnectorLink
+version: v1
+definition:
+  name: my_connector
+  url:
+    readWriteUrls:
+      read:
+        valueFromEnv: APP_MY_CONNECTOR_READ_URL
+      write:
+        valueFromEnv: APP_MY_CONNECTOR_WRITE_URL
+  headers:
+    Authorization:
+      valueFromEnv: APP_MY_CONNECTOR_AUTHORIZATION_HEADER
+  schema:
+    version: v0.1
+    schema:
+      scalar_types:
+        bool:
+          representation:
+            type: boolean
+          aggregate_functions:
+            bool_and:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: bool
+            bool_or:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: bool
+            every:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: bool
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: custom
+              argument_type:
+                type: named
+                name: bool
+            _gte:
+              type: custom
+              argument_type:
+                type: named
+                name: bool
+            _in:
+              type: in
+            _lt:
+              type: custom
+              argument_type:
+                type: named
+                name: bool
+            _lte:
+              type: custom
+              argument_type:
+                type: named
+                name: bool
+            _neq:
+              type: custom
+              argument_type:
+                type: named
+                name: bool
+        int4:
+          representation:
+            type: int32
+          aggregate_functions: {}
+          comparison_operators: {}
+        jsonb:
+          aggregate_functions: {}
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: custom
+              argument_type:
+                type: named
+                name: jsonb
+            _gte:
+              type: custom
+              argument_type:
+                type: named
+                name: jsonb
+            _in:
+              type: in
+            _lt:
+              type: custom
+              argument_type:
+                type: named
+                name: jsonb
+            _lte:
+              type: custom
+              argument_type:
+                type: named
+                name: jsonb
+            _neq:
+              type: custom
+              argument_type:
+                type: named
+                name: jsonb
+            jsonb_contained:
+              type: custom
+              argument_type:
+                type: named
+                name: jsonb
+            jsonb_contains:
+              type: custom
+              argument_type:
+                type: named
+                name: jsonb
+            jsonb_exists:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+        text:
+          representation:
+            type: string
+          aggregate_functions:
+            max:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: text
+            min:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: text
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _gte:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _ilike:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _in:
+              type: in
+            _iregex:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _like:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _lt:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _lte:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _neq:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _nilike:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _niregex:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _nlike:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _nregex:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _regex:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            starts_with:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            ts_match_tt:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+        timestamptz:
+          representation:
+            type: timestamptz
+          aggregate_functions:
+            max:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamptz
+            min:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamptz
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: custom
+              argument_type:
+                type: named
+                name: timestamptz
+            _gte:
+              type: custom
+              argument_type:
+                type: named
+                name: timestamptz
+            _in:
+              type: in
+            _lt:
+              type: custom
+              argument_type:
+                type: named
+                name: timestamptz
+            _lte:
+              type: custom
+              argument_type:
+                type: named
+                name: timestamptz
+            _neq:
+              type: custom
+              argument_type:
+                type: named
+                name: timestamptz
+        uuid:
+          representation:
+            type: uuid
+          aggregate_functions: {}
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: custom
+              argument_type:
+                type: named
+                name: uuid
+            _gte:
+              type: custom
+              argument_type:
+                type: named
+                name: uuid
+            _in:
+              type: in
+            _lt:
+              type: custom
+              argument_type:
+                type: named
+                name: uuid
+            _lte:
+              type: custom
+              argument_type:
+                type: named
+                name: uuid
+            _neq:
+              type: custom
+              argument_type:
+                type: named
+                name: uuid
+        varchar:
+          representation:
+            type: string
+          aggregate_functions:
+            max:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: text
+            min:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: text
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _gte:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _ilike:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _in:
+              type: in
+            _iregex:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _like:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _lt:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _lte:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _neq:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _nilike:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _niregex:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _nlike:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _nregex:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _regex:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            starts_with:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            ts_match_tt:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+      object_types:
+        comments:
+          fields:
+            body:
+              type:
+                type: named
+                name: jsonb
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamptz
+            deleted_at:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamptz
+            id:
+              type:
+                type: named
+                name: uuid
+            thread_id:
+              type:
+                type: named
+                name: uuid
+            updated_at:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamptz
+            user_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+        delete_comments_by_id_response:
+          description: Responses from the 'delete_comments_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: comments
+        delete_mentions_by_id_response:
+          description: Responses from the 'delete_mentions_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: mentions
+        delete_notifications_by_id_response:
+          description: Responses from the 'delete_notifications_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: notifications
+        delete_project_members_by_id_response:
+          description: Responses from the 'delete_project_members_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: project_members
+        delete_project_members_by_project_id_and_user_id_response:
+          description: Responses from the 'delete_project_members_by_project_id_and_user_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: project_members
+        delete_projects_by_id_response:
+          description: Responses from the 'delete_projects_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: projects
+        delete_threads_by_id_response:
+          description: Responses from the 'delete_threads_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: threads
+        delete_threads_by_project_id_and_thread_key_response:
+          description: Responses from the 'delete_threads_by_project_id_and_thread_key' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: threads
+        delete_users_by_email_response:
+          description: Responses from the 'delete_users_by_email' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: users
+        delete_users_by_id_response:
+          description: Responses from the 'delete_users_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: users
+        insert_comments_object:
+          fields:
+            body:
+              type:
+                type: named
+                name: jsonb
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamptz
+            deleted_at:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamptz
+            id:
+              type:
+                type: named
+                name: uuid
+            thread_id:
+              type:
+                type: named
+                name: uuid
+            updated_at:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamptz
+            user_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+        insert_comments_response:
+          description: Responses from the 'insert_comments' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: comments
+        insert_mentions_object:
+          fields:
+            comment_id:
+              type:
+                type: named
+                name: uuid
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamptz
+            id:
+              type:
+                type: named
+                name: uuid
+            user_id:
+              type:
+                type: named
+                name: uuid
+        insert_mentions_response:
+          description: Responses from the 'insert_mentions' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: mentions
+        insert_notifications_object:
+          fields:
+            comment_id:
+              type:
+                type: named
+                name: uuid
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamptz
+            id:
+              type:
+                type: named
+                name: uuid
+            read:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: bool
+            thread_id:
+              type:
+                type: named
+                name: uuid
+            user_id:
+              type:
+                type: named
+                name: uuid
+        insert_notifications_response:
+          description: Responses from the 'insert_notifications' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: notifications
+        insert_project_members_object:
+          fields:
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamptz
+            id:
+              type:
+                type: named
+                name: uuid
+            project_id:
+              type:
+                type: named
+                name: uuid
+            role:
+              type:
+                type: named
+                name: varchar
+            user_id:
+              type:
+                type: named
+                name: uuid
+        insert_project_members_response:
+          description: Responses from the 'insert_project_members' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: project_members
+        insert_projects_object:
+          fields:
+            id:
+              type:
+                type: named
+                name: uuid
+            name:
+              type:
+                type: named
+                name: varchar
+        insert_projects_response:
+          description: Responses from the 'insert_projects' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: projects
+        insert_threads_object:
+          fields:
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamptz
+            id:
+              type:
+                type: named
+                name: uuid
+            metadata:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: jsonb
+            project_id:
+              type:
+                type: named
+                name: uuid
+            resolved:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: bool
+            thread_key:
+              type:
+                type: named
+                name: varchar
+        insert_threads_response:
+          description: Responses from the 'insert_threads' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: threads
+        insert_users_object:
+          fields:
+            avatar_url:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: text
+            email:
+              type:
+                type: named
+                name: varchar
+            id:
+              type:
+                type: named
+                name: uuid
+            name:
+              type:
+                type: named
+                name: varchar
+        insert_users_response:
+          description: Responses from the 'insert_users' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: users
+        mentions:
+          fields:
+            comment_id:
+              type:
+                type: named
+                name: uuid
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamptz
+            id:
+              type:
+                type: named
+                name: uuid
+            user_id:
+              type:
+                type: named
+                name: uuid
+        notifications:
+          fields:
+            comment_id:
+              type:
+                type: named
+                name: uuid
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamptz
+            id:
+              type:
+                type: named
+                name: uuid
+            read:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: bool
+            thread_id:
+              type:
+                type: named
+                name: uuid
+            user_id:
+              type:
+                type: named
+                name: uuid
+        project_members:
+          fields:
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamptz
+            id:
+              type:
+                type: named
+                name: uuid
+            project_id:
+              type:
+                type: named
+                name: uuid
+            role:
+              type:
+                type: named
+                name: varchar
+            user_id:
+              type:
+                type: named
+                name: uuid
+        projects:
+          fields:
+            id:
+              type:
+                type: named
+                name: uuid
+            name:
+              type:
+                type: named
+                name: varchar
+        threads:
+          fields:
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamptz
+            id:
+              type:
+                type: named
+                name: uuid
+            metadata:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: jsonb
+            project_id:
+              type:
+                type: named
+                name: uuid
+            resolved:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: bool
+            thread_key:
+              type:
+                type: named
+                name: varchar
+        update_column_comments_body:
+          description: Update the 'body' column in the 'comments' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: named
+                name: jsonb
+        update_column_comments_created_at:
+          description: Update the 'created_at' column in the 'comments' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamptz
+        update_column_comments_deleted_at:
+          description: Update the 'deleted_at' column in the 'comments' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamptz
+        update_column_comments_id:
+          description: Update the 'id' column in the 'comments' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: named
+                name: uuid
+        update_column_comments_thread_id:
+          description: Update the 'thread_id' column in the 'comments' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: named
+                name: uuid
+        update_column_comments_updated_at:
+          description: Update the 'updated_at' column in the 'comments' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamptz
+        update_column_comments_user_id:
+          description: Update the 'user_id' column in the 'comments' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+        update_column_mentions_comment_id:
+          description: Update the 'comment_id' column in the 'mentions' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: named
+                name: uuid
+        update_column_mentions_created_at:
+          description: Update the 'created_at' column in the 'mentions' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamptz
+        update_column_mentions_id:
+          description: Update the 'id' column in the 'mentions' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: named
+                name: uuid
+        update_column_mentions_user_id:
+          description: Update the 'user_id' column in the 'mentions' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: named
+                name: uuid
+        update_column_notifications_comment_id:
+          description: Update the 'comment_id' column in the 'notifications' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: named
+                name: uuid
+        update_column_notifications_created_at:
+          description: Update the 'created_at' column in the 'notifications' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamptz
+        update_column_notifications_id:
+          description: Update the 'id' column in the 'notifications' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: named
+                name: uuid
+        update_column_notifications_read:
+          description: Update the 'read' column in the 'notifications' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: bool
+        update_column_notifications_thread_id:
+          description: Update the 'thread_id' column in the 'notifications' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: named
+                name: uuid
+        update_column_notifications_user_id:
+          description: Update the 'user_id' column in the 'notifications' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: named
+                name: uuid
+        update_column_project_members_created_at:
+          description: Update the 'created_at' column in the 'project_members' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamptz
+        update_column_project_members_id:
+          description: Update the 'id' column in the 'project_members' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: named
+                name: uuid
+        update_column_project_members_project_id:
+          description: Update the 'project_id' column in the 'project_members' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: named
+                name: uuid
+        update_column_project_members_role:
+          description: Update the 'role' column in the 'project_members' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: named
+                name: varchar
+        update_column_project_members_user_id:
+          description: Update the 'user_id' column in the 'project_members' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: named
+                name: uuid
+        update_column_projects_id:
+          description: Update the 'id' column in the 'projects' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: named
+                name: uuid
+        update_column_projects_name:
+          description: Update the 'name' column in the 'projects' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: named
+                name: varchar
+        update_column_threads_created_at:
+          description: Update the 'created_at' column in the 'threads' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamptz
+        update_column_threads_id:
+          description: Update the 'id' column in the 'threads' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: named
+                name: uuid
+        update_column_threads_metadata:
+          description: Update the 'metadata' column in the 'threads' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: jsonb
+        update_column_threads_project_id:
+          description: Update the 'project_id' column in the 'threads' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: named
+                name: uuid
+        update_column_threads_resolved:
+          description: Update the 'resolved' column in the 'threads' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: bool
+        update_column_threads_thread_key:
+          description: Update the 'thread_key' column in the 'threads' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: named
+                name: varchar
+        update_column_users_avatar_url:
+          description: Update the 'avatar_url' column in the 'users' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: text
+        update_column_users_email:
+          description: Update the 'email' column in the 'users' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: named
+                name: varchar
+        update_column_users_id:
+          description: Update the 'id' column in the 'users' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: named
+                name: uuid
+        update_column_users_name:
+          description: Update the 'name' column in the 'users' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: named
+                name: varchar
+        update_comments_by_id_response:
+          description: Responses from the 'update_comments_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: comments
+        update_comments_by_id_update_columns:
+          description: Update the columns of the 'comments' collection
+          fields:
+            body:
+              description: Update the 'body' column in the 'comments' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_comments_body
+            created_at:
+              description: Update the 'created_at' column in the 'comments' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_comments_created_at
+            deleted_at:
+              description: Update the 'deleted_at' column in the 'comments' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_comments_deleted_at
+            id:
+              description: Update the 'id' column in the 'comments' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_comments_id
+            thread_id:
+              description: Update the 'thread_id' column in the 'comments' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_comments_thread_id
+            updated_at:
+              description: Update the 'updated_at' column in the 'comments' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_comments_updated_at
+            user_id:
+              description: Update the 'user_id' column in the 'comments' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_comments_user_id
+        update_mentions_by_id_response:
+          description: Responses from the 'update_mentions_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: mentions
+        update_mentions_by_id_update_columns:
+          description: Update the columns of the 'mentions' collection
+          fields:
+            comment_id:
+              description: Update the 'comment_id' column in the 'mentions' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_mentions_comment_id
+            created_at:
+              description: Update the 'created_at' column in the 'mentions' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_mentions_created_at
+            id:
+              description: Update the 'id' column in the 'mentions' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_mentions_id
+            user_id:
+              description: Update the 'user_id' column in the 'mentions' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_mentions_user_id
+        update_notifications_by_id_response:
+          description: Responses from the 'update_notifications_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: notifications
+        update_notifications_by_id_update_columns:
+          description: Update the columns of the 'notifications' collection
+          fields:
+            comment_id:
+              description: Update the 'comment_id' column in the 'notifications' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_notifications_comment_id
+            created_at:
+              description: Update the 'created_at' column in the 'notifications' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_notifications_created_at
+            id:
+              description: Update the 'id' column in the 'notifications' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_notifications_id
+            read:
+              description: Update the 'read' column in the 'notifications' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_notifications_read
+            thread_id:
+              description: Update the 'thread_id' column in the 'notifications' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_notifications_thread_id
+            user_id:
+              description: Update the 'user_id' column in the 'notifications' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_notifications_user_id
+        update_project_members_by_id_response:
+          description: Responses from the 'update_project_members_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: project_members
+        update_project_members_by_id_update_columns:
+          description: Update the columns of the 'project_members' collection
+          fields:
+            created_at:
+              description: Update the 'created_at' column in the 'project_members' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_project_members_created_at
+            id:
+              description: Update the 'id' column in the 'project_members' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_project_members_id
+            project_id:
+              description: Update the 'project_id' column in the 'project_members' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_project_members_project_id
+            role:
+              description: Update the 'role' column in the 'project_members' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_project_members_role
+            user_id:
+              description: Update the 'user_id' column in the 'project_members' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_project_members_user_id
+        update_project_members_by_project_id_and_user_id_response:
+          description: Responses from the 'update_project_members_by_project_id_and_user_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: project_members
+        update_project_members_by_project_id_and_user_id_update_columns:
+          description: Update the columns of the 'project_members' collection
+          fields:
+            created_at:
+              description: Update the 'created_at' column in the 'project_members' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_project_members_created_at
+            id:
+              description: Update the 'id' column in the 'project_members' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_project_members_id
+            project_id:
+              description: Update the 'project_id' column in the 'project_members' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_project_members_project_id
+            role:
+              description: Update the 'role' column in the 'project_members' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_project_members_role
+            user_id:
+              description: Update the 'user_id' column in the 'project_members' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_project_members_user_id
+        update_projects_by_id_response:
+          description: Responses from the 'update_projects_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: projects
+        update_projects_by_id_update_columns:
+          description: Update the columns of the 'projects' collection
+          fields:
+            id:
+              description: Update the 'id' column in the 'projects' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_projects_id
+            name:
+              description: Update the 'name' column in the 'projects' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_projects_name
+        update_threads_by_id_response:
+          description: Responses from the 'update_threads_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: threads
+        update_threads_by_id_update_columns:
+          description: Update the columns of the 'threads' collection
+          fields:
+            created_at:
+              description: Update the 'created_at' column in the 'threads' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_threads_created_at
+            id:
+              description: Update the 'id' column in the 'threads' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_threads_id
+            metadata:
+              description: Update the 'metadata' column in the 'threads' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_threads_metadata
+            project_id:
+              description: Update the 'project_id' column in the 'threads' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_threads_project_id
+            resolved:
+              description: Update the 'resolved' column in the 'threads' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_threads_resolved
+            thread_key:
+              description: Update the 'thread_key' column in the 'threads' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_threads_thread_key
+        update_threads_by_project_id_and_thread_key_response:
+          description: Responses from the 'update_threads_by_project_id_and_thread_key' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: threads
+        update_threads_by_project_id_and_thread_key_update_columns:
+          description: Update the columns of the 'threads' collection
+          fields:
+            created_at:
+              description: Update the 'created_at' column in the 'threads' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_threads_created_at
+            id:
+              description: Update the 'id' column in the 'threads' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_threads_id
+            metadata:
+              description: Update the 'metadata' column in the 'threads' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_threads_metadata
+            project_id:
+              description: Update the 'project_id' column in the 'threads' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_threads_project_id
+            resolved:
+              description: Update the 'resolved' column in the 'threads' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_threads_resolved
+            thread_key:
+              description: Update the 'thread_key' column in the 'threads' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_threads_thread_key
+        update_users_by_email_response:
+          description: Responses from the 'update_users_by_email' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: users
+        update_users_by_email_update_columns:
+          description: Update the columns of the 'users' collection
+          fields:
+            avatar_url:
+              description: Update the 'avatar_url' column in the 'users' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_users_avatar_url
+            email:
+              description: Update the 'email' column in the 'users' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_users_email
+            id:
+              description: Update the 'id' column in the 'users' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_users_id
+            name:
+              description: Update the 'name' column in the 'users' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_users_name
+        update_users_by_id_response:
+          description: Responses from the 'update_users_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                type: named
+                name: int4
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: users
+        update_users_by_id_update_columns:
+          description: Update the columns of the 'users' collection
+          fields:
+            avatar_url:
+              description: Update the 'avatar_url' column in the 'users' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_users_avatar_url
+            email:
+              description: Update the 'email' column in the 'users' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_users_email
+            id:
+              description: Update the 'id' column in the 'users' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_users_id
+            name:
+              description: Update the 'name' column in the 'users' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: update_column_users_name
+        users:
+          fields:
+            avatar_url:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: text
+            email:
+              type:
+                type: named
+                name: varchar
+            id:
+              type:
+                type: named
+                name: uuid
+            name:
+              type:
+                type: named
+                name: varchar
+      collections:
+        - name: comments
+          arguments: {}
+          type: comments
+          uniqueness_constraints:
+            comments_pkey:
+              unique_columns:
+                - id
+          foreign_keys:
+            comments_thread_id_fkey:
+              column_mapping:
+                thread_id: id
+              foreign_collection: threads
+            comments_user_id_fkey:
+              column_mapping:
+                user_id: id
+              foreign_collection: users
+        - name: mentions
+          arguments: {}
+          type: mentions
+          uniqueness_constraints:
+            mentions_pkey:
+              unique_columns:
+                - id
+          foreign_keys:
+            mentions_comment_id_fkey:
+              column_mapping:
+                comment_id: id
+              foreign_collection: comments
+            mentions_user_id_fkey:
+              column_mapping:
+                user_id: id
+              foreign_collection: users
+        - name: notifications
+          arguments: {}
+          type: notifications
+          uniqueness_constraints:
+            notifications_pkey:
+              unique_columns:
+                - id
+          foreign_keys:
+            notifications_comment_id_fkey:
+              column_mapping:
+                comment_id: id
+              foreign_collection: comments
+            notifications_thread_id_fkey:
+              column_mapping:
+                thread_id: id
+              foreign_collection: threads
+            notifications_user_id_fkey:
+              column_mapping:
+                user_id: id
+              foreign_collection: users
+        - name: project_members
+          arguments: {}
+          type: project_members
+          uniqueness_constraints:
+            project_members_pkey:
+              unique_columns:
+                - id
+            project_members_project_id_user_id_key:
+              unique_columns:
+                - project_id
+                - user_id
+          foreign_keys:
+            project_members_project_id_fkey:
+              column_mapping:
+                project_id: id
+              foreign_collection: projects
+            project_members_user_id_fkey:
+              column_mapping:
+                user_id: id
+              foreign_collection: users
+        - name: projects
+          arguments: {}
+          type: projects
+          uniqueness_constraints:
+            projects_pkey:
+              unique_columns:
+                - id
+          foreign_keys: {}
+        - name: threads
+          arguments: {}
+          type: threads
+          uniqueness_constraints:
+            threads_pkey:
+              unique_columns:
+                - id
+            threads_project_id_thread_key_key:
+              unique_columns:
+                - project_id
+                - thread_key
+          foreign_keys:
+            threads_project_id_fkey:
+              column_mapping:
+                project_id: id
+              foreign_collection: projects
+        - name: users
+          arguments: {}
+          type: users
+          uniqueness_constraints:
+            users_email_key:
+              unique_columns:
+                - email
+            users_pkey:
+              unique_columns:
+                - id
+          foreign_keys: {}
+      functions: []
+      procedures:
+        - name: delete_comments_by_id
+          description: Delete any row on the 'comments' collection using the 'id' key
+          arguments:
+            key_id:
+              type:
+                type: named
+                name: uuid
+            pre_check:
+              description: Delete permission predicate over the 'comments' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: comments
+          result_type:
+            type: named
+            name: delete_comments_by_id_response
+        - name: delete_mentions_by_id
+          description: Delete any row on the 'mentions' collection using the 'id' key
+          arguments:
+            key_id:
+              type:
+                type: named
+                name: uuid
+            pre_check:
+              description: Delete permission predicate over the 'mentions' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: mentions
+          result_type:
+            type: named
+            name: delete_mentions_by_id_response
+        - name: delete_notifications_by_id
+          description: Delete any row on the 'notifications' collection using the 'id' key
+          arguments:
+            key_id:
+              type:
+                type: named
+                name: uuid
+            pre_check:
+              description: Delete permission predicate over the 'notifications' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: notifications
+          result_type:
+            type: named
+            name: delete_notifications_by_id_response
+        - name: delete_project_members_by_id
+          description: Delete any row on the 'project_members' collection using the 'id' key
+          arguments:
+            key_id:
+              type:
+                type: named
+                name: uuid
+            pre_check:
+              description: Delete permission predicate over the 'project_members' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: project_members
+          result_type:
+            type: named
+            name: delete_project_members_by_id_response
+        - name: delete_project_members_by_project_id_and_user_id
+          description: Delete any row on the 'project_members' collection using the 'project_id' and 'user_id' keys
+          arguments:
+            key_project_id:
+              type:
+                type: named
+                name: uuid
+            key_user_id:
+              type:
+                type: named
+                name: uuid
+            pre_check:
+              description: Delete permission predicate over the 'project_members' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: project_members
+          result_type:
+            type: named
+            name: delete_project_members_by_project_id_and_user_id_response
+        - name: delete_projects_by_id
+          description: Delete any row on the 'projects' collection using the 'id' key
+          arguments:
+            key_id:
+              type:
+                type: named
+                name: uuid
+            pre_check:
+              description: Delete permission predicate over the 'projects' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: projects
+          result_type:
+            type: named
+            name: delete_projects_by_id_response
+        - name: delete_threads_by_id
+          description: Delete any row on the 'threads' collection using the 'id' key
+          arguments:
+            key_id:
+              type:
+                type: named
+                name: uuid
+            pre_check:
+              description: Delete permission predicate over the 'threads' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: threads
+          result_type:
+            type: named
+            name: delete_threads_by_id_response
+        - name: delete_threads_by_project_id_and_thread_key
+          description: Delete any row on the 'threads' collection using the 'project_id' and 'thread_key' keys
+          arguments:
+            key_project_id:
+              type:
+                type: named
+                name: uuid
+            key_thread_key:
+              type:
+                type: named
+                name: varchar
+            pre_check:
+              description: Delete permission predicate over the 'threads' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: threads
+          result_type:
+            type: named
+            name: delete_threads_by_project_id_and_thread_key_response
+        - name: delete_users_by_email
+          description: Delete any row on the 'users' collection using the 'email' key
+          arguments:
+            key_email:
+              type:
+                type: named
+                name: varchar
+            pre_check:
+              description: Delete permission predicate over the 'users' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: users
+          result_type:
+            type: named
+            name: delete_users_by_email_response
+        - name: delete_users_by_id
+          description: Delete any row on the 'users' collection using the 'id' key
+          arguments:
+            key_id:
+              type:
+                type: named
+                name: uuid
+            pre_check:
+              description: Delete permission predicate over the 'users' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: users
+          result_type:
+            type: named
+            name: delete_users_by_id_response
+        - name: insert_comments
+          description: Insert into the comments table
+          arguments:
+            objects:
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: insert_comments_object
+            post_check:
+              description: Insert permission predicate over the 'comments' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: comments
+          result_type:
+            type: named
+            name: insert_comments_response
+        - name: insert_mentions
+          description: Insert into the mentions table
+          arguments:
+            objects:
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: insert_mentions_object
+            post_check:
+              description: Insert permission predicate over the 'mentions' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: mentions
+          result_type:
+            type: named
+            name: insert_mentions_response
+        - name: insert_notifications
+          description: Insert into the notifications table
+          arguments:
+            objects:
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: insert_notifications_object
+            post_check:
+              description: Insert permission predicate over the 'notifications' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: notifications
+          result_type:
+            type: named
+            name: insert_notifications_response
+        - name: insert_project_members
+          description: Insert into the project_members table
+          arguments:
+            objects:
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: insert_project_members_object
+            post_check:
+              description: Insert permission predicate over the 'project_members' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: project_members
+          result_type:
+            type: named
+            name: insert_project_members_response
+        - name: insert_projects
+          description: Insert into the projects table
+          arguments:
+            objects:
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: insert_projects_object
+            post_check:
+              description: Insert permission predicate over the 'projects' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: projects
+          result_type:
+            type: named
+            name: insert_projects_response
+        - name: insert_threads
+          description: Insert into the threads table
+          arguments:
+            objects:
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: insert_threads_object
+            post_check:
+              description: Insert permission predicate over the 'threads' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: threads
+          result_type:
+            type: named
+            name: insert_threads_response
+        - name: insert_users
+          description: Insert into the users table
+          arguments:
+            objects:
+              type:
+                type: array
+                element_type:
+                  type: named
+                  name: insert_users_object
+            post_check:
+              description: Insert permission predicate over the 'users' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: users
+          result_type:
+            type: named
+            name: insert_users_response
+        - name: update_comments_by_id
+          description: Update any row on the 'comments' collection using the 'id' key
+          arguments:
+            key_id:
+              type:
+                type: named
+                name: uuid
+            post_check:
+              description: Update permission post-condition predicate over the 'comments' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: comments
+            pre_check:
+              description: Update permission pre-condition predicate over the 'comments' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: comments
+            update_columns:
+              type:
+                type: named
+                name: update_comments_by_id_update_columns
+          result_type:
+            type: named
+            name: update_comments_by_id_response
+        - name: update_mentions_by_id
+          description: Update any row on the 'mentions' collection using the 'id' key
+          arguments:
+            key_id:
+              type:
+                type: named
+                name: uuid
+            post_check:
+              description: Update permission post-condition predicate over the 'mentions' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: mentions
+            pre_check:
+              description: Update permission pre-condition predicate over the 'mentions' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: mentions
+            update_columns:
+              type:
+                type: named
+                name: update_mentions_by_id_update_columns
+          result_type:
+            type: named
+            name: update_mentions_by_id_response
+        - name: update_notifications_by_id
+          description: Update any row on the 'notifications' collection using the 'id' key
+          arguments:
+            key_id:
+              type:
+                type: named
+                name: uuid
+            post_check:
+              description: Update permission post-condition predicate over the 'notifications' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: notifications
+            pre_check:
+              description: Update permission pre-condition predicate over the 'notifications' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: notifications
+            update_columns:
+              type:
+                type: named
+                name: update_notifications_by_id_update_columns
+          result_type:
+            type: named
+            name: update_notifications_by_id_response
+        - name: update_project_members_by_id
+          description: Update any row on the 'project_members' collection using the 'id' key
+          arguments:
+            key_id:
+              type:
+                type: named
+                name: uuid
+            post_check:
+              description: Update permission post-condition predicate over the 'project_members' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: project_members
+            pre_check:
+              description: Update permission pre-condition predicate over the 'project_members' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: project_members
+            update_columns:
+              type:
+                type: named
+                name: update_project_members_by_id_update_columns
+          result_type:
+            type: named
+            name: update_project_members_by_id_response
+        - name: update_project_members_by_project_id_and_user_id
+          description: Update any row on the 'project_members' collection using the 'project_id' and 'user_id' keys
+          arguments:
+            key_project_id:
+              type:
+                type: named
+                name: uuid
+            key_user_id:
+              type:
+                type: named
+                name: uuid
+            post_check:
+              description: Update permission post-condition predicate over the 'project_members' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: project_members
+            pre_check:
+              description: Update permission pre-condition predicate over the 'project_members' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: project_members
+            update_columns:
+              type:
+                type: named
+                name: update_project_members_by_project_id_and_user_id_update_columns
+          result_type:
+            type: named
+            name: update_project_members_by_project_id_and_user_id_response
+        - name: update_projects_by_id
+          description: Update any row on the 'projects' collection using the 'id' key
+          arguments:
+            key_id:
+              type:
+                type: named
+                name: uuid
+            post_check:
+              description: Update permission post-condition predicate over the 'projects' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: projects
+            pre_check:
+              description: Update permission pre-condition predicate over the 'projects' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: projects
+            update_columns:
+              type:
+                type: named
+                name: update_projects_by_id_update_columns
+          result_type:
+            type: named
+            name: update_projects_by_id_response
+        - name: update_threads_by_id
+          description: Update any row on the 'threads' collection using the 'id' key
+          arguments:
+            key_id:
+              type:
+                type: named
+                name: uuid
+            post_check:
+              description: Update permission post-condition predicate over the 'threads' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: threads
+            pre_check:
+              description: Update permission pre-condition predicate over the 'threads' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: threads
+            update_columns:
+              type:
+                type: named
+                name: update_threads_by_id_update_columns
+          result_type:
+            type: named
+            name: update_threads_by_id_response
+        - name: update_threads_by_project_id_and_thread_key
+          description: Update any row on the 'threads' collection using the 'project_id' and 'thread_key' keys
+          arguments:
+            key_project_id:
+              type:
+                type: named
+                name: uuid
+            key_thread_key:
+              type:
+                type: named
+                name: varchar
+            post_check:
+              description: Update permission post-condition predicate over the 'threads' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: threads
+            pre_check:
+              description: Update permission pre-condition predicate over the 'threads' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: threads
+            update_columns:
+              type:
+                type: named
+                name: update_threads_by_project_id_and_thread_key_update_columns
+          result_type:
+            type: named
+            name: update_threads_by_project_id_and_thread_key_response
+        - name: update_users_by_email
+          description: Update any row on the 'users' collection using the 'email' key
+          arguments:
+            key_email:
+              type:
+                type: named
+                name: varchar
+            post_check:
+              description: Update permission post-condition predicate over the 'users' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: users
+            pre_check:
+              description: Update permission pre-condition predicate over the 'users' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: users
+            update_columns:
+              type:
+                type: named
+                name: update_users_by_email_update_columns
+          result_type:
+            type: named
+            name: update_users_by_email_response
+        - name: update_users_by_id
+          description: Update any row on the 'users' collection using the 'id' key
+          arguments:
+            key_id:
+              type:
+                type: named
+                name: uuid
+            post_check:
+              description: Update permission post-condition predicate over the 'users' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: users
+            pre_check:
+              description: Update permission pre-condition predicate over the 'users' collection
+              type:
+                type: nullable
+                underlying_type:
+                  type: predicate
+                  object_type_name: users
+            update_columns:
+              type:
+                type: named
+                name: update_users_by_id_update_columns
+          result_type:
+            type: named
+            name: update_users_by_id_response
+    capabilities:
+      version: 0.1.6
+      capabilities:
+        query:
+          aggregates: {}
+          variables: {}
+          explain: {}
+          nested_fields:
+            filter_by: {}
+            order_by: {}
+          exists:
+            nested_collections: {}
+        mutation:
+          transactional: {}
+          explain: {}
+        relationships:
+          relation_comparisons: {}
+          order_by_aggregate: {}
