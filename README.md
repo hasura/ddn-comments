@@ -130,28 +130,28 @@ erDiagram
 1. Get Threads for a Project
 
 ```graphql
-query GetThreads($projectId: uuid!, $resolved: Boolean) {
+query GetThreads($projectId: Uuid, $resolved: Bool) {
   threads(
-    where: { 
-      project_id: { _eq: $projectId }, 
+    where: {
+      projectId: { _eq: $projectId },
       resolved: { _eq: $resolved }
     }
-    order_by: { created_at: desc }
+    order_by: { createdAt: Desc }
   ) {
     id
-    thread_key
+    threadKey
     resolved
     metadata
-    comments(order_by: { created_at: asc }) {
+    comments(order_by: { createdAt: Asc }) {
       id
       body
-      created_at
-      updated_at
-      deleted_at
+      createdAt
+      updatedAt
+      deletedAt
       user {
         id
         name
-        avatar_url
+        avatarUrl
       }
       mentions {
         user {
@@ -162,32 +162,41 @@ query GetThreads($projectId: uuid!, $resolved: Boolean) {
     }
   }
 }
+
+{
+  "resolved": true,
+  "projectId": "fe7a8c51-0d50-4f41-b033-e0c3c49a4dec"
+}
 ```
 
 2. Get Users for Mentions
 
 ```graphql
-query GetUsers($searchText: String) {
+query GetUsers($searchText: Varchar) {
   users(where: { name: { _ilike: $searchText } }) {
     id
     name
-    avatar_url
+    avatarUrl
   }
+}
+
+{
+  "searchText": "Alice Smith"
 }
 ```
 
 3. Get Notifications for a User
 
 ```graphql
-query GetNotifications($userId: UUID!) {
+query GetNotifications($userId: Uuid!) {
   notifications(
-    where: { user_id: { _eq: $userId } }
-    order_by: { created_at: desc }
+    where: { userId: { _eq: $userId } }
+    order_by: { createdAt: Desc }
   ) {
     id
     thread {
       id
-      thread_key
+      threadKey
       project {
         id
         name
@@ -202,8 +211,12 @@ query GetNotifications($userId: UUID!) {
       }
     }
     read
-    created_at
+    createdAt
   }
+}
+
+{
+  "userId": "579de195-fa14-4b9f-ba49-2fd6e38a0f5b"
 }
 ```
 

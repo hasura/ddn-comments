@@ -1,3 +1,6 @@
+--
+postgres://hasura_role_93a458ce-b22a-484e-afe2-3393e65e31a3:uk7TqdsIwiQ8@snowy-bonus-642199.us-east-2.aws.neon.tech/trusty-lizard-43_db_368619?options=project%3Dsnowy-bonus-642199&sslmode=require
+
 -- Enable UUID extension if not already enabled
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
