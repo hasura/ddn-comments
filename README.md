@@ -10,22 +10,34 @@ This document outlines the design for a Liveblocks-like comments system for DDN.
 erDiagram
     USERS ||--o{ COMMENTS : creates
     USERS ||--o{ NOTIFICATIONS : receives
+    USERS ||--o{ PROJECT_MEMBERS : "belongs to"
+    PROJECTS ||--o{ PROJECT_MEMBERS : "has"
     PROJECTS ||--o{ THREADS : contains
     THREADS ||--o{ COMMENTS : has
     COMMENTS ||--o{ MENTIONS : includes
     COMMENTS ||--o{ NOTIFICATIONS : triggers
     USERS ||--o{ MENTIONS : "is mentioned in"
-
+    
     USERS {
         UUID id PK
         string name
         string email
         string avatar_url
     }
+    
     PROJECTS {
         UUID id PK
         string name
     }
+    
+    PROJECT_MEMBERS {
+        UUID id PK
+        UUID project_id FK
+        UUID user_id FK
+        string role
+        timestamp created_at
+    }
+    
     THREADS {
         UUID id PK
         UUID project_id FK
@@ -34,6 +46,7 @@ erDiagram
         boolean resolved
         jsonb metadata
     }
+    
     COMMENTS {
         UUID id PK
         UUID thread_id FK
@@ -43,12 +56,14 @@ erDiagram
         timestamp updated_at
         timestamp deleted_at
     }
+    
     MENTIONS {
         UUID id PK
         UUID comment_id FK
         UUID user_id FK
         timestamp created_at
     }
+    
     NOTIFICATIONS {
         UUID id PK
         UUID user_id FK
@@ -62,92 +77,51 @@ erDiagram
 ## Features
 
 1. **Threaded Comments**: Comments are organized into threads, each associated with a specific project and identified by a unique `thread_key`.
+   - `threads` table with `project_id` and `thread_key`
+   - `comments` table with `thread_id` for organization
 
 2. **Anonymous and Authenticated Comments**: The system supports both anonymous and authenticated comments.
+    - Consider adding permission checks using `project_members` roles
 
 3. **Mentions**: Users can be mentioned in comments using the `@` symbol. Mentions are automatically detected and processed from the comment body.
+      - Consider restricting mentions to only project members
+   - Add validation against `project_members` table
 
 4. **Notifications**: Users receive notifications when they are mentioned in a comment or when there's activity in a thread they're participating in.
+     - Links users, threads, and comments effectively
 
 5. **Thread Resolution**: Threads can be marked as resolved, allowing for easy management of discussions.
+- Consider adding role-based resolution permissions
 
 6. **Comment Deletion**: Comments can be soft-deleted, maintaining the integrity of the conversation while allowing for content moderation.
+ - Enables soft deletion while maintaining thread integrity
 
 7. **Real-time Updates**: Initially implemented using polling, with the possibility to extend to GraphQL subscriptions in the future.
 
-## Data Model
+8. **Project Access Control**
+   - Only project members can view/create threads
+   - Different capabilities based on role (owner/admin/member)
+   - Enforced through `project_members` table checks
 
-### Users Table
+### Other Features Possible with this schema
 
-```sql
-CREATE TABLE users (
-  id UUID PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  email VARCHAR(255) UNIQUE NOT NULL,
-  avatar_url TEXT
-);
-```
+1. **Role-Based Permissions**
+   - Control thread creation based on project role. Restrict thread resolution to owners/admins
 
-### Projects Table
+2.  **Member-Only Mentions**
+    - Restrict @mentions to current project members. Prevent mentions of users outside the project
 
-```sql
-CREATE TABLE projects (
-  id UUID PRIMARY KEY,
-  name VARCHAR(255) NOT NULL
-);
-```
+3.  **Project Activity Dashboard**
+    - Track member participation and engagement. Monitor thread creation/resolution by role
 
-### Threads Table
+4.  **Thread Visibility Control**
+    - Private threads visible only to specific roles. Confidential discussions limited to admins/owners
 
-```sql
-CREATE TABLE threads (
-  id UUID PRIMARY KEY,
-  project_id UUID NOT NULL REFERENCES projects(id),
-  thread_key VARCHAR(255) NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  resolved BOOLEAN DEFAULT FALSE,
-  metadata JSONB,
-  UNIQUE(project_id, thread_key)
-);
-```
+5.  **Role-Based Notifications**
+    - Notify all admins of new threads. Alert owners of unresolved threads. 
 
-### Comments Table
 
-```sql
-CREATE TABLE comments (
-  id UUID PRIMARY KEY,
-  thread_id UUID NOT NULL REFERENCES threads(id),
-  user_id UUID REFERENCES users(id),
-  body JSONB NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  deleted_at TIMESTAMP WITH TIME ZONE
-);
-```
 
-### Mentions Table
-
-```sql
-CREATE TABLE mentions (
-  id UUID PRIMARY KEY,
-  comment_id UUID NOT NULL REFERENCES comments(id),
-  user_id UUID NOT NULL REFERENCES users(id),
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-```
-
-### Notifications Table
-
-```sql
-CREATE TABLE notifications (
-  id UUID PRIMARY KEY,
-  user_id UUID NOT NULL REFERENCES users(id),
-  thread_id UUID NOT NULL REFERENCES threads(id),
-  comment_id UUID NOT NULL REFERENCES comments(id),
-  read BOOLEAN DEFAULT FALSE,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-```
 
 ## GraphQL Queries and Mutations
 
@@ -156,9 +130,12 @@ CREATE TABLE notifications (
 1. Get Threads for a Project
 
 ```graphql
-query GetThreads($projectId: UUID!, $resolved: Boolean) {
+query GetThreads($projectId: uuid!, $resolved: Boolean) {
   threads(
-    where: { project_id: { _eq: $projectId }, resolved: { _eq: $resolved } }
+    where: { 
+      project_id: { _eq: $projectId }, 
+      resolved: { _eq: $resolved }
+    }
     order_by: { created_at: desc }
   ) {
     id
@@ -329,6 +306,7 @@ mutation MarkNotificationAsRead($notificationId: UUID!) {
 - The system should parse the comment body for `@` mentions and create the appropriate entries in the `mentions` table.
 - Initially, use polling to simulate real-time updates. This can be extended to use GraphQL subscriptions in the future for true real-time functionality.
 - Ensure proper indexing on frequently queried fields (e.g., `thread_key`, `user_id`, `thread_id`) for optimal performance.
+  - Other indexing recommendations - `project_members(project_id, user_id, role)`,  `project_members(user_id, role)`,  `comments(user_id, created_at)`
 - Implement proper access control to ensure users can only interact with threads and comments they have permission to view or modify.
 
 This structure provides a solid foundation for implementing a Liveblocks-like comments system in your console frontend, supporting the key features of threaded discussions, mentions, and notifications.
