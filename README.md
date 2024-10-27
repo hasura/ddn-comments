@@ -275,9 +275,9 @@ mutation AddComment($threadId: UUID!, $userId: UUID, $body: jsonb!) {
 
 ```graphql
 mutation ResolveThread($threadId: UUID!) {
-  update_threads_by_pk(
-    pk_columns: { id: $threadId }
-    _set: { resolved: true }
+  updateThreadByPk(
+    pkColumns: { id: $threadId }
+    set: { resolved: true }
   ) {
     id
     resolved
