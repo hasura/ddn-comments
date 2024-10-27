@@ -1,0 +1,179 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Mentions
+  fields:
+    - name: commentId
+      type: Uuid!
+    - name: createdAt
+      type: Timestamptz
+    - name: id
+      type: Uuid!
+    - name: userId
+      type: Uuid!
+  graphql:
+    typeName: Mentions
+    inputTypeName: MentionsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: mentions
+      fieldMapping:
+        commentId:
+          column:
+            name: comment_id
+        createdAt:
+          column:
+            name: created_at
+        id:
+          column:
+            name: id
+        userId:
+          column:
+            name: user_id
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Mentions
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - commentId
+          - createdAt
+          - id
+          - userId
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: MentionsBoolExp
+  operand:
+    object:
+      type: Mentions
+      comparableFields:
+        - fieldName: commentId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: createdAt
+          booleanExpressionType: TimestamptzBoolExp
+        - fieldName: id
+          booleanExpressionType: UuidBoolExp
+        - fieldName: userId
+          booleanExpressionType: UuidBoolExp
+      comparableRelationships:
+        - relationshipName: comment
+        - relationshipName: user
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: MentionsBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: MentionsAggExp
+  operand:
+    object:
+      aggregatedType: Mentions
+      aggregatableFields:
+        - fieldName: commentId
+          aggregateExpression: UuidAggExp
+        - fieldName: createdAt
+          aggregateExpression: TimestamptzAggExp
+        - fieldName: id
+          aggregateExpression: UuidAggExp
+        - fieldName: userId
+          aggregateExpression: UuidAggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: MentionsAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: Mentions
+  objectType: Mentions
+  source:
+    dataConnectorName: my_connector
+    collection: mentions
+  filterExpressionType: MentionsBoolExp
+  aggregateExpression: MentionsAggExp
+  orderableFields:
+    - fieldName: commentId
+      orderByDirections:
+        enableAll: true
+    - fieldName: createdAt
+      orderByDirections:
+        enableAll: true
+    - fieldName: id
+      orderByDirections:
+        enableAll: true
+    - fieldName: userId
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: mentions
+    selectUniques:
+      - queryRootField: mentionsById
+        uniqueIdentifier:
+          - id
+    orderByExpressionType: MentionsOrderBy
+    filterInputTypeName: MentionsFilterInput
+    aggregate:
+      queryRootField: mentionsAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Mentions
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: comment
+  sourceType: Mentions
+  target:
+    model:
+      name: Comments
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: commentId
+      target:
+        modelField:
+          - fieldName: id
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: user
+  sourceType: Mentions
+  target:
+    model:
+      name: Users
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: userId
+      target:
+        modelField:
+          - fieldName: id
+

@@ -1,0 +1,236 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Threads
+  fields:
+    - name: createdAt
+      type: Timestamptz
+    - name: id
+      type: Uuid!
+    - name: metadata
+      type: Jsonb
+    - name: projectId
+      type: Uuid!
+    - name: resolved
+      type: Bool
+    - name: threadKey
+      type: Varchar!
+  graphql:
+    typeName: Threads
+    inputTypeName: ThreadsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: threads
+      fieldMapping:
+        createdAt:
+          column:
+            name: created_at
+        id:
+          column:
+            name: id
+        metadata:
+          column:
+            name: metadata
+        projectId:
+          column:
+            name: project_id
+        resolved:
+          column:
+            name: resolved
+        threadKey:
+          column:
+            name: thread_key
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Threads
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - createdAt
+          - id
+          - metadata
+          - projectId
+          - resolved
+          - threadKey
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: ThreadsBoolExp
+  operand:
+    object:
+      type: Threads
+      comparableFields:
+        - fieldName: createdAt
+          booleanExpressionType: TimestamptzBoolExp
+        - fieldName: id
+          booleanExpressionType: UuidBoolExp
+        - fieldName: metadata
+          booleanExpressionType: JsonbBoolExp
+        - fieldName: projectId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: resolved
+          booleanExpressionType: BoolBoolExp
+        - fieldName: threadKey
+          booleanExpressionType: VarcharBoolExp
+      comparableRelationships:
+        - relationshipName: comments
+        - relationshipName: notifications
+        - relationshipName: project
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: ThreadsBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: ThreadsAggExp
+  operand:
+    object:
+      aggregatedType: Threads
+      aggregatableFields:
+        - fieldName: createdAt
+          aggregateExpression: TimestamptzAggExp
+        - fieldName: id
+          aggregateExpression: UuidAggExp
+        - fieldName: metadata
+          aggregateExpression: JsonbAggExp
+        - fieldName: projectId
+          aggregateExpression: UuidAggExp
+        - fieldName: resolved
+          aggregateExpression: BoolAggExp
+        - fieldName: threadKey
+          aggregateExpression: VarcharAggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: ThreadsAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: Threads
+  objectType: Threads
+  source:
+    dataConnectorName: my_connector
+    collection: threads
+  filterExpressionType: ThreadsBoolExp
+  aggregateExpression: ThreadsAggExp
+  orderableFields:
+    - fieldName: createdAt
+      orderByDirections:
+        enableAll: true
+    - fieldName: id
+      orderByDirections:
+        enableAll: true
+    - fieldName: metadata
+      orderByDirections:
+        enableAll: true
+    - fieldName: projectId
+      orderByDirections:
+        enableAll: true
+    - fieldName: resolved
+      orderByDirections:
+        enableAll: true
+    - fieldName: threadKey
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: threads
+    selectUniques:
+      - queryRootField: threadsById
+        uniqueIdentifier:
+          - id
+      - queryRootField: threadsByThreadsProjectIdThreadKeyKey
+        uniqueIdentifier:
+          - projectId
+          - threadKey
+    orderByExpressionType: ThreadsOrderBy
+    filterInputTypeName: ThreadsFilterInput
+    aggregate:
+      queryRootField: threadsAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Threads
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: comments
+  sourceType: Threads
+  target:
+    model:
+      name: Comments
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: CommentsAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: id
+      target:
+        modelField:
+          - fieldName: threadId
+  graphql:
+    aggregateFieldName: commentsAggregate
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: notifications
+  sourceType: Threads
+  target:
+    model:
+      name: Notifications
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: NotificationsAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: id
+      target:
+        modelField:
+          - fieldName: threadId
+  graphql:
+    aggregateFieldName: notificationsAggregate
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: project
+  sourceType: Threads
+  target:
+    model:
+      name: Projects
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: projectId
+      target:
+        modelField:
+          - fieldName: id
+

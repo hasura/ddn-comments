@@ -1,0 +1,154 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Projects
+  fields:
+    - name: id
+      type: Uuid!
+    - name: name
+      type: Varchar!
+  graphql:
+    typeName: Projects
+    inputTypeName: ProjectsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: projects
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Projects
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - id
+          - name
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: ProjectsBoolExp
+  operand:
+    object:
+      type: Projects
+      comparableFields:
+        - fieldName: id
+          booleanExpressionType: UuidBoolExp
+        - fieldName: name
+          booleanExpressionType: VarcharBoolExp
+      comparableRelationships:
+        - relationshipName: projectMembers
+        - relationshipName: threads
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: ProjectsBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: ProjectsAggExp
+  operand:
+    object:
+      aggregatedType: Projects
+      aggregatableFields:
+        - fieldName: id
+          aggregateExpression: UuidAggExp
+        - fieldName: name
+          aggregateExpression: VarcharAggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: ProjectsAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: Projects
+  objectType: Projects
+  source:
+    dataConnectorName: my_connector
+    collection: projects
+  filterExpressionType: ProjectsBoolExp
+  aggregateExpression: ProjectsAggExp
+  orderableFields:
+    - fieldName: id
+      orderByDirections:
+        enableAll: true
+    - fieldName: name
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: projects
+    selectUniques:
+      - queryRootField: projectsById
+        uniqueIdentifier:
+          - id
+    orderByExpressionType: ProjectsOrderBy
+    filterInputTypeName: ProjectsFilterInput
+    aggregate:
+      queryRootField: projectsAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Projects
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: projectMembers
+  sourceType: Projects
+  target:
+    model:
+      name: ProjectMembers
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: ProjectMembersAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: id
+      target:
+        modelField:
+          - fieldName: projectId
+  graphql:
+    aggregateFieldName: projectMembersAggregate
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: threads
+  sourceType: Projects
+  target:
+    model:
+      name: Threads
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: ThreadsAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: id
+      target:
+        modelField:
+          - fieldName: projectId
+  graphql:
+    aggregateFieldName: threadsAggregate
+

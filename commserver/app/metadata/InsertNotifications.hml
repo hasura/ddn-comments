@@ -1,0 +1,132 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: InsertNotificationsObject
+  fields:
+    - name: commentId
+      type: Uuid!
+    - name: createdAt
+      type: Timestamptz
+    - name: id
+      type: Uuid!
+    - name: read
+      type: Bool
+    - name: threadId
+      type: Uuid!
+    - name: userId
+      type: Uuid!
+  graphql:
+    typeName: InsertNotificationsObject
+    inputTypeName: InsertNotificationsObjectInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: insert_notifications_object
+      fieldMapping:
+        commentId:
+          column:
+            name: comment_id
+        createdAt:
+          column:
+            name: created_at
+        id:
+          column:
+            name: id
+        read:
+          column:
+            name: read
+        threadId:
+          column:
+            name: thread_id
+        userId:
+          column:
+            name: user_id
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: InsertNotificationsObject
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - commentId
+          - createdAt
+          - id
+          - read
+          - threadId
+          - userId
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: InsertNotificationsResponse
+  description: Responses from the 'insert_notifications' procedure
+  fields:
+    - name: affectedRows
+      type: Int4!
+      description: The number of rows affected by the mutation
+    - name: returning
+      type: "[Notifications!]!"
+      description: Data from rows affected by the mutation
+  graphql:
+    typeName: InsertNotificationsResponse
+    inputTypeName: InsertNotificationsResponseInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: insert_notifications_response
+      fieldMapping:
+        affectedRows:
+          column:
+            name: affected_rows
+        returning:
+          column:
+            name: returning
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: InsertNotificationsResponse
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - affectedRows
+          - returning
+
+---
+kind: Command
+version: v1
+definition:
+  name: InsertNotifications
+  outputType: InsertNotificationsResponse!
+  arguments:
+    - name: objects
+      type: "[InsertNotificationsObject!]!"
+    - name: postCheck
+      type: NotificationsBoolExp
+      description: Insert permission predicate over the 'notifications' collection
+  source:
+    dataConnectorName: my_connector
+    dataConnectorCommand:
+      procedure: insert_notifications
+    argumentMapping:
+      objects: objects
+      postCheck: post_check
+  graphql:
+    rootFieldName: insertNotifications
+    rootFieldKind: Mutation
+  description: Insert into the notifications table
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: InsertNotifications
+  permissions:
+    - role: admin
+      allowExecution: true
+

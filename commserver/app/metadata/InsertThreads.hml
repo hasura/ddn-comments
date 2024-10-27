@@ -1,0 +1,132 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: InsertThreadsObject
+  fields:
+    - name: createdAt
+      type: Timestamptz
+    - name: id
+      type: Uuid!
+    - name: metadata
+      type: Jsonb
+    - name: projectId
+      type: Uuid!
+    - name: resolved
+      type: Bool
+    - name: threadKey
+      type: Varchar!
+  graphql:
+    typeName: InsertThreadsObject
+    inputTypeName: InsertThreadsObjectInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: insert_threads_object
+      fieldMapping:
+        createdAt:
+          column:
+            name: created_at
+        id:
+          column:
+            name: id
+        metadata:
+          column:
+            name: metadata
+        projectId:
+          column:
+            name: project_id
+        resolved:
+          column:
+            name: resolved
+        threadKey:
+          column:
+            name: thread_key
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: InsertThreadsObject
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - createdAt
+          - id
+          - metadata
+          - projectId
+          - resolved
+          - threadKey
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: InsertThreadsResponse
+  description: Responses from the 'insert_threads' procedure
+  fields:
+    - name: affectedRows
+      type: Int4!
+      description: The number of rows affected by the mutation
+    - name: returning
+      type: "[Threads!]!"
+      description: Data from rows affected by the mutation
+  graphql:
+    typeName: InsertThreadsResponse
+    inputTypeName: InsertThreadsResponseInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: insert_threads_response
+      fieldMapping:
+        affectedRows:
+          column:
+            name: affected_rows
+        returning:
+          column:
+            name: returning
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: InsertThreadsResponse
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - affectedRows
+          - returning
+
+---
+kind: Command
+version: v1
+definition:
+  name: InsertThreads
+  outputType: InsertThreadsResponse!
+  arguments:
+    - name: objects
+      type: "[InsertThreadsObject!]!"
+    - name: postCheck
+      type: ThreadsBoolExp
+      description: Insert permission predicate over the 'threads' collection
+  source:
+    dataConnectorName: my_connector
+    dataConnectorCommand:
+      procedure: insert_threads
+    argumentMapping:
+      objects: objects
+      postCheck: post_check
+  graphql:
+    rootFieldName: insertThreads
+    rootFieldKind: Mutation
+  description: Insert into the threads table
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: InsertThreads
+  permissions:
+    - role: admin
+      allowExecution: true
+

@@ -1,0 +1,101 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: InsertProjectsObject
+  fields:
+    - name: id
+      type: Uuid!
+    - name: name
+      type: Varchar!
+  graphql:
+    typeName: InsertProjectsObject
+    inputTypeName: InsertProjectsObjectInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: insert_projects_object
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: InsertProjectsObject
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - id
+          - name
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: InsertProjectsResponse
+  description: Responses from the 'insert_projects' procedure
+  fields:
+    - name: affectedRows
+      type: Int4!
+      description: The number of rows affected by the mutation
+    - name: returning
+      type: "[Projects!]!"
+      description: Data from rows affected by the mutation
+  graphql:
+    typeName: InsertProjectsResponse
+    inputTypeName: InsertProjectsResponseInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: insert_projects_response
+      fieldMapping:
+        affectedRows:
+          column:
+            name: affected_rows
+        returning:
+          column:
+            name: returning
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: InsertProjectsResponse
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - affectedRows
+          - returning
+
+---
+kind: Command
+version: v1
+definition:
+  name: InsertProjects
+  outputType: InsertProjectsResponse!
+  arguments:
+    - name: objects
+      type: "[InsertProjectsObject!]!"
+    - name: postCheck
+      type: ProjectsBoolExp
+      description: Insert permission predicate over the 'projects' collection
+  source:
+    dataConnectorName: my_connector
+    dataConnectorCommand:
+      procedure: insert_projects
+    argumentMapping:
+      objects: objects
+      postCheck: post_check
+  graphql:
+    rootFieldName: insertProjects
+    rootFieldKind: Mutation
+  description: Insert into the projects table
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: InsertProjects
+  permissions:
+    - role: admin
+      allowExecution: true
+

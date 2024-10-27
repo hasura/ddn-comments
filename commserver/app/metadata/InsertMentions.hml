@@ -1,0 +1,120 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: InsertMentionsObject
+  fields:
+    - name: commentId
+      type: Uuid!
+    - name: createdAt
+      type: Timestamptz
+    - name: id
+      type: Uuid!
+    - name: userId
+      type: Uuid!
+  graphql:
+    typeName: InsertMentionsObject
+    inputTypeName: InsertMentionsObjectInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: insert_mentions_object
+      fieldMapping:
+        commentId:
+          column:
+            name: comment_id
+        createdAt:
+          column:
+            name: created_at
+        id:
+          column:
+            name: id
+        userId:
+          column:
+            name: user_id
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: InsertMentionsObject
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - commentId
+          - createdAt
+          - id
+          - userId
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: InsertMentionsResponse
+  description: Responses from the 'insert_mentions' procedure
+  fields:
+    - name: affectedRows
+      type: Int4!
+      description: The number of rows affected by the mutation
+    - name: returning
+      type: "[Mentions!]!"
+      description: Data from rows affected by the mutation
+  graphql:
+    typeName: InsertMentionsResponse
+    inputTypeName: InsertMentionsResponseInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: insert_mentions_response
+      fieldMapping:
+        affectedRows:
+          column:
+            name: affected_rows
+        returning:
+          column:
+            name: returning
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: InsertMentionsResponse
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - affectedRows
+          - returning
+
+---
+kind: Command
+version: v1
+definition:
+  name: InsertMentions
+  outputType: InsertMentionsResponse!
+  arguments:
+    - name: objects
+      type: "[InsertMentionsObject!]!"
+    - name: postCheck
+      type: MentionsBoolExp
+      description: Insert permission predicate over the 'mentions' collection
+  source:
+    dataConnectorName: my_connector
+    dataConnectorCommand:
+      procedure: insert_mentions
+    argumentMapping:
+      objects: objects
+      postCheck: post_check
+  graphql:
+    rootFieldName: insertMentions
+    rootFieldKind: Mutation
+  description: Insert into the mentions table
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: InsertMentions
+  permissions:
+    - role: admin
+      allowExecution: true
+

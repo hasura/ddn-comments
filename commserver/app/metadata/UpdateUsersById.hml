@@ -1,0 +1,132 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateUsersByIdUpdateColumns
+  description: Update the columns of the 'users' collection
+  fields:
+    - name: avatarUrl
+      type: UpdateColumnUsersAvatarUrl
+      description: Update the 'avatar_url' column in the 'users' collection.
+    - name: email
+      type: UpdateColumnUsersEmail
+      description: Update the 'email' column in the 'users' collection.
+    - name: id
+      type: UpdateColumnUsersId
+      description: Update the 'id' column in the 'users' collection.
+    - name: name
+      type: UpdateColumnUsersName
+      description: Update the 'name' column in the 'users' collection.
+  graphql:
+    typeName: UpdateUsersByIdUpdateColumns
+    inputTypeName: UpdateUsersByIdUpdateColumnsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: update_users_by_id_update_columns
+      fieldMapping:
+        avatarUrl:
+          column:
+            name: avatar_url
+        email:
+          column:
+            name: email
+        id:
+          column:
+            name: id
+        name:
+          column:
+            name: name
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateUsersByIdUpdateColumns
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - avatarUrl
+          - email
+          - id
+          - name
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateUsersByIdResponse
+  description: Responses from the 'update_users_by_id' procedure
+  fields:
+    - name: affectedRows
+      type: Int4!
+      description: The number of rows affected by the mutation
+    - name: returning
+      type: "[Users!]!"
+      description: Data from rows affected by the mutation
+  graphql:
+    typeName: UpdateUsersByIdResponse
+    inputTypeName: UpdateUsersByIdResponseInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: update_users_by_id_response
+      fieldMapping:
+        affectedRows:
+          column:
+            name: affected_rows
+        returning:
+          column:
+            name: returning
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateUsersByIdResponse
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - affectedRows
+          - returning
+
+---
+kind: Command
+version: v1
+definition:
+  name: UpdateUsersById
+  outputType: UpdateUsersByIdResponse!
+  arguments:
+    - name: keyId
+      type: Uuid!
+    - name: postCheck
+      type: UsersBoolExp
+      description: Update permission post-condition predicate over the 'users' collection
+    - name: preCheck
+      type: UsersBoolExp
+      description: Update permission pre-condition predicate over the 'users' collection
+    - name: updateColumns
+      type: UpdateUsersByIdUpdateColumns!
+  source:
+    dataConnectorName: my_connector
+    dataConnectorCommand:
+      procedure: update_users_by_id
+    argumentMapping:
+      keyId: key_id
+      postCheck: post_check
+      preCheck: pre_check
+      updateColumns: update_columns
+  graphql:
+    rootFieldName: updateUsersById
+    rootFieldKind: Mutation
+  description: Update any row on the 'users' collection using the 'id' key
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: UpdateUsersById
+  permissions:
+    - role: admin
+      allowExecution: true
+

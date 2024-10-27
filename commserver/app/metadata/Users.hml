@@ -1,0 +1,236 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Users
+  fields:
+    - name: avatarUrl
+      type: Text
+    - name: email
+      type: Varchar!
+    - name: id
+      type: Uuid!
+    - name: name
+      type: Varchar!
+  graphql:
+    typeName: Users
+    inputTypeName: UsersInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: users
+      fieldMapping:
+        avatarUrl:
+          column:
+            name: avatar_url
+        email:
+          column:
+            name: email
+        id:
+          column:
+            name: id
+        name:
+          column:
+            name: name
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Users
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - avatarUrl
+          - email
+          - id
+          - name
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: UsersBoolExp
+  operand:
+    object:
+      type: Users
+      comparableFields:
+        - fieldName: avatarUrl
+          booleanExpressionType: TextBoolExp
+        - fieldName: email
+          booleanExpressionType: VarcharBoolExp
+        - fieldName: id
+          booleanExpressionType: UuidBoolExp
+        - fieldName: name
+          booleanExpressionType: VarcharBoolExp
+      comparableRelationships:
+        - relationshipName: comments
+        - relationshipName: mentions
+        - relationshipName: notifications
+        - relationshipName: projectMembers
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: UsersBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: UsersAggExp
+  operand:
+    object:
+      aggregatedType: Users
+      aggregatableFields:
+        - fieldName: avatarUrl
+          aggregateExpression: TextAggExp
+        - fieldName: email
+          aggregateExpression: VarcharAggExp
+        - fieldName: id
+          aggregateExpression: UuidAggExp
+        - fieldName: name
+          aggregateExpression: VarcharAggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: UsersAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: Users
+  objectType: Users
+  source:
+    dataConnectorName: my_connector
+    collection: users
+  filterExpressionType: UsersBoolExp
+  aggregateExpression: UsersAggExp
+  orderableFields:
+    - fieldName: avatarUrl
+      orderByDirections:
+        enableAll: true
+    - fieldName: email
+      orderByDirections:
+        enableAll: true
+    - fieldName: id
+      orderByDirections:
+        enableAll: true
+    - fieldName: name
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: users
+    selectUniques:
+      - queryRootField: usersByEmail
+        uniqueIdentifier:
+          - email
+      - queryRootField: usersById
+        uniqueIdentifier:
+          - id
+    orderByExpressionType: UsersOrderBy
+    filterInputTypeName: UsersFilterInput
+    aggregate:
+      queryRootField: usersAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Users
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: comments
+  sourceType: Users
+  target:
+    model:
+      name: Comments
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: CommentsAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: id
+      target:
+        modelField:
+          - fieldName: userId
+  graphql:
+    aggregateFieldName: commentsAggregate
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: mentions
+  sourceType: Users
+  target:
+    model:
+      name: Mentions
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: MentionsAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: id
+      target:
+        modelField:
+          - fieldName: userId
+  graphql:
+    aggregateFieldName: mentionsAggregate
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: notifications
+  sourceType: Users
+  target:
+    model:
+      name: Notifications
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: NotificationsAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: id
+      target:
+        modelField:
+          - fieldName: userId
+  graphql:
+    aggregateFieldName: notificationsAggregate
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: projectMembers
+  sourceType: Users
+  target:
+    model:
+      name: ProjectMembers
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: ProjectMembersAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: id
+      target:
+        modelField:
+          - fieldName: userId
+  graphql:
+    aggregateFieldName: projectMembersAggregate
+

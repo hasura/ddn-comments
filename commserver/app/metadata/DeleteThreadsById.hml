@@ -1,0 +1,72 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: DeleteThreadsByIdResponse
+  description: Responses from the 'delete_threads_by_id' procedure
+  fields:
+    - name: affectedRows
+      type: Int4!
+      description: The number of rows affected by the mutation
+    - name: returning
+      type: "[Threads!]!"
+      description: Data from rows affected by the mutation
+  graphql:
+    typeName: DeleteThreadsByIdResponse
+    inputTypeName: DeleteThreadsByIdResponseInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: delete_threads_by_id_response
+      fieldMapping:
+        affectedRows:
+          column:
+            name: affected_rows
+        returning:
+          column:
+            name: returning
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: DeleteThreadsByIdResponse
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - affectedRows
+          - returning
+
+---
+kind: Command
+version: v1
+definition:
+  name: DeleteThreadsById
+  outputType: DeleteThreadsByIdResponse!
+  arguments:
+    - name: keyId
+      type: Uuid!
+    - name: preCheck
+      type: ThreadsBoolExp
+      description: Delete permission predicate over the 'threads' collection
+  source:
+    dataConnectorName: my_connector
+    dataConnectorCommand:
+      procedure: delete_threads_by_id
+    argumentMapping:
+      keyId: key_id
+      preCheck: pre_check
+  graphql:
+    rootFieldName: deleteThreadsById
+    rootFieldKind: Mutation
+  description: Delete any row on the 'threads' collection using the 'id' key
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: DeleteThreadsById
+  permissions:
+    - role: admin
+      allowExecution: true
+

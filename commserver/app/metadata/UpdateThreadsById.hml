@@ -1,0 +1,338 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateColumnThreadsCreatedAt
+  description: Update the 'created_at' column in the 'threads' collection
+  fields:
+    - name: set
+      type: Timestamptz
+      description: Set the column to this value
+  graphql:
+    typeName: UpdateColumnThreadsCreatedAt
+    inputTypeName: UpdateColumnThreadsCreatedAtInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: update_column_threads_created_at
+      fieldMapping:
+        set:
+          column:
+            name: _set
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateColumnThreadsCreatedAt
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - set
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateColumnThreadsId
+  description: Update the 'id' column in the 'threads' collection
+  fields:
+    - name: set
+      type: Uuid!
+      description: Set the column to this value
+  graphql:
+    typeName: UpdateColumnThreadsId
+    inputTypeName: UpdateColumnThreadsIdInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: update_column_threads_id
+      fieldMapping:
+        set:
+          column:
+            name: _set
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateColumnThreadsId
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - set
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateColumnThreadsMetadata
+  description: Update the 'metadata' column in the 'threads' collection
+  fields:
+    - name: set
+      type: Jsonb
+      description: Set the column to this value
+  graphql:
+    typeName: UpdateColumnThreadsMetadata
+    inputTypeName: UpdateColumnThreadsMetadataInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: update_column_threads_metadata
+      fieldMapping:
+        set:
+          column:
+            name: _set
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateColumnThreadsMetadata
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - set
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateColumnThreadsProjectId
+  description: Update the 'project_id' column in the 'threads' collection
+  fields:
+    - name: set
+      type: Uuid!
+      description: Set the column to this value
+  graphql:
+    typeName: UpdateColumnThreadsProjectId
+    inputTypeName: UpdateColumnThreadsProjectIdInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: update_column_threads_project_id
+      fieldMapping:
+        set:
+          column:
+            name: _set
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateColumnThreadsProjectId
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - set
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateColumnThreadsResolved
+  description: Update the 'resolved' column in the 'threads' collection
+  fields:
+    - name: set
+      type: Bool
+      description: Set the column to this value
+  graphql:
+    typeName: UpdateColumnThreadsResolved
+    inputTypeName: UpdateColumnThreadsResolvedInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: update_column_threads_resolved
+      fieldMapping:
+        set:
+          column:
+            name: _set
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateColumnThreadsResolved
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - set
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateColumnThreadsThreadKey
+  description: Update the 'thread_key' column in the 'threads' collection
+  fields:
+    - name: set
+      type: Varchar!
+      description: Set the column to this value
+  graphql:
+    typeName: UpdateColumnThreadsThreadKey
+    inputTypeName: UpdateColumnThreadsThreadKeyInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: update_column_threads_thread_key
+      fieldMapping:
+        set:
+          column:
+            name: _set
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateColumnThreadsThreadKey
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - set
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateThreadsByIdUpdateColumns
+  description: Update the columns of the 'threads' collection
+  fields:
+    - name: createdAt
+      type: UpdateColumnThreadsCreatedAt
+      description: Update the 'created_at' column in the 'threads' collection.
+    - name: id
+      type: UpdateColumnThreadsId
+      description: Update the 'id' column in the 'threads' collection.
+    - name: metadata
+      type: UpdateColumnThreadsMetadata
+      description: Update the 'metadata' column in the 'threads' collection.
+    - name: projectId
+      type: UpdateColumnThreadsProjectId
+      description: Update the 'project_id' column in the 'threads' collection.
+    - name: resolved
+      type: UpdateColumnThreadsResolved
+      description: Update the 'resolved' column in the 'threads' collection.
+    - name: threadKey
+      type: UpdateColumnThreadsThreadKey
+      description: Update the 'thread_key' column in the 'threads' collection.
+  graphql:
+    typeName: UpdateThreadsByIdUpdateColumns
+    inputTypeName: UpdateThreadsByIdUpdateColumnsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: update_threads_by_id_update_columns
+      fieldMapping:
+        createdAt:
+          column:
+            name: created_at
+        id:
+          column:
+            name: id
+        metadata:
+          column:
+            name: metadata
+        projectId:
+          column:
+            name: project_id
+        resolved:
+          column:
+            name: resolved
+        threadKey:
+          column:
+            name: thread_key
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateThreadsByIdUpdateColumns
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - createdAt
+          - id
+          - metadata
+          - projectId
+          - resolved
+          - threadKey
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateThreadsByIdResponse
+  description: Responses from the 'update_threads_by_id' procedure
+  fields:
+    - name: affectedRows
+      type: Int4!
+      description: The number of rows affected by the mutation
+    - name: returning
+      type: "[Threads!]!"
+      description: Data from rows affected by the mutation
+  graphql:
+    typeName: UpdateThreadsByIdResponse
+    inputTypeName: UpdateThreadsByIdResponseInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_connector
+      dataConnectorObjectType: update_threads_by_id_response
+      fieldMapping:
+        affectedRows:
+          column:
+            name: affected_rows
+        returning:
+          column:
+            name: returning
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateThreadsByIdResponse
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - affectedRows
+          - returning
+
+---
+kind: Command
+version: v1
+definition:
+  name: UpdateThreadsById
+  outputType: UpdateThreadsByIdResponse!
+  arguments:
+    - name: keyId
+      type: Uuid!
+    - name: postCheck
+      type: ThreadsBoolExp
+      description: Update permission post-condition predicate over the 'threads' collection
+    - name: preCheck
+      type: ThreadsBoolExp
+      description: Update permission pre-condition predicate over the 'threads' collection
+    - name: updateColumns
+      type: UpdateThreadsByIdUpdateColumns!
+  source:
+    dataConnectorName: my_connector
+    dataConnectorCommand:
+      procedure: update_threads_by_id
+    argumentMapping:
+      keyId: key_id
+      postCheck: post_check
+      preCheck: pre_check
+      updateColumns: update_columns
+  graphql:
+    rootFieldName: updateThreadsById
+    rootFieldKind: Mutation
+  description: Update any row on the 'threads' collection using the 'id' key
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: UpdateThreadsById
+  permissions:
+    - role: admin
+      allowExecution: true
+
