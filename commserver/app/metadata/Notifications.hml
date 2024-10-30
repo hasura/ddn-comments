@@ -57,6 +57,14 @@ definition:
           - read
           - threadId
           - userId
+    - role: user
+      output:
+        allowedFields:
+          - id
+          - threadId
+          - commentId
+          - read
+          - createdAt
 
 ---
 kind: BooleanExpressionType
@@ -167,6 +175,26 @@ definition:
     - role: admin
       select:
         filter: null
+    - role: user
+      select:
+        filter:
+          or:
+            - fieldComparison:
+                field: userId
+                operator: _eq
+                value:
+                  sessionVariable: x-hasura-user-id
+            - relationship:
+                name: thread
+                predicate:
+                  relationship:
+                    name: comments
+                    predicate:
+                      fieldComparison:
+                        field: userId
+                        operator: _eq
+                        value:
+                          sessionVariable: x-hasura-user-id
 
 ---
 kind: Relationship

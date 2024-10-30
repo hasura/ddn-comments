@@ -127,6 +127,15 @@ version: v1
 definition:
   commandName: InsertThreads
   permissions:
-    - role: admin
-      allowExecution: true
+  - role: admin
+    allowExecution: true
+  - role: user
+    allowExecution: true
+    argumentPresets:
+      - argument: objects
+        value:
+          literal:
+            - projectId: null
+              metadata: {}
+
 

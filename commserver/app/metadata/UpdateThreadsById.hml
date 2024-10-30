@@ -335,4 +335,15 @@ definition:
   permissions:
     - role: admin
       allowExecution: true
+    - role: user
+      allowExecution: true
+      argumentPresets:
+        - argument: keyId
+          value:
+            sessionVariable: x-hasura-user-id
+        - argument: updateColumns
+          value:
+            literal:
+              resolved:
+                set: true
 
