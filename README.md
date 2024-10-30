@@ -324,23 +324,6 @@ mutation insertComments(
 #   }
 # } -->
 ```
-<!-- 
-2. Add Comment to Thread
-
-```graphql
-# mutation AddComment($threadId: UUID!, $userId: UUID, $body: jsonb!) {
-#   insert_comments_one(
-#     object: { thread_id: $threadId, user_id: $userId, body: $body }
-#   ) {
-#     id
-#     body
-#     user {
-#       id
-#       name
-#     }
-#   }
-# } -->
-```
 
 3. Resolve Thread
 
