@@ -45,6 +45,18 @@ definition:
           - email
           - id
           - name
+    - role: user
+      output:
+        allowedFields:
+          - id
+          - name
+          - avatarUrl
+    - role: anonymous
+      output:
+        allowedFields:
+          - id
+          - name
+          - avatarUrl
 
 ---
 kind: BooleanExpressionType

@@ -63,6 +63,22 @@ definition:
           - threadId
           - updatedAt
           - userId
+    - role: user
+      output:
+        allowedFields:
+          - id
+          - threadId
+          - userId
+          - body
+          - createdAt
+          - updatedAt
+    - role: anonymous
+      output:
+        allowedFields:
+          - id
+          - threadId
+          - body
+          - createdAt
 
 ---
 kind: BooleanExpressionType
@@ -181,6 +197,23 @@ definition:
     - role: admin
       select:
         filter: null
+    - role: user
+      select:
+        filter:
+          relationship:
+            name: thread
+            predicate:
+              relationship:
+                name: project
+                predicate:
+                  relationship:
+                    name: projectMembers
+                    predicate:
+                      fieldComparison:
+                        field: userId
+                        operator: _eq
+                        value:
+                          sessionVariable: x-hasura-user-id
 
 ---
 kind: Relationship

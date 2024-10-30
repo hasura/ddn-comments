@@ -129,4 +129,13 @@ definition:
   permissions:
     - role: admin
       allowExecution: true
+    - role: user
+      allowExecution: true
+      argumentPresets:
+        - argument: objects
+          value:
+            literal:
+              - userId:
+                  sessionVariable: x-hasura-user-id
+                read: false
 
