@@ -121,7 +121,28 @@ erDiagram
     - Notify all admins of new threads. Alert owners of unresolved threads. 
 
 
+## Setup Instructions
 
+1. Git Clone this repo: https://github.com/hasura/ddn-comments.git and cd into `ddn-comments/commserver`
+   
+2. Using the `up.sql' and 'postgresql_seed.sql' files set up a PostgreSQL database. Can use sample [Neon Db](https://neon.tech/) to do that.
+   
+3. Change the value for `APP_MY_CONNECTOR_CONNECTION_URI` in files `commserver/.env` and `commserver/.env.cloud`
+
+4. Build the supergraph locally using the following command 
+```shell 
+   ddn supergraph build local 
+```
+
+5. Run Docker. For local development, Hasura runs several services (engine, connectors, auth, etc.), which use the following ports: 3000, 4317 and so on. Please ensure these ports are available. If not, modify the published ports in the Docker Compose files from this repository accordingly.
+```shell 
+   ddn run docker-start
+```
+
+6. Check out the console to discover and test the GraphQL API 
+```shell 
+   ddn console --local
+``` 
 
 ## GraphQL Queries and Mutations
 
@@ -164,7 +185,7 @@ query GetThreads($projectId: Uuid, $resolved: Bool) {
 }
 
 {
-  "resolved": true,
+  "resolved": false,
   "projectId": "fe7a8c51-0d50-4f41-b033-e0c3c49a4dec"
 }
 ```
@@ -225,62 +246,121 @@ query GetNotifications($userId: Uuid!) {
 1. Create Thread and Initial Comment
 
 ```graphql
-mutation CreateThreadAndComment(
-  $projectId: UUID!
-  $threadKey: String!
-  $userId: UUID
-  $body: jsonb!
-  $metadata: jsonb
+mutation CreateThread(
+  $id: Uuid!,
+  $projectId: Uuid!,
+  $threadKey: Varchar!,
+  $metadata: Jsonb
 ) {
-  insert_threads_one(
-    object: {
-      project_id: $projectId
-      thread_key: $threadKey
+  insertThreads(
+    objects: [{
+      id: $id,
+      projectId: $projectId,
+      threadKey: $threadKey,
       metadata: $metadata
-      comments: { data: { user_id: $userId, body: $body } }
-    }
+    }]
   ) {
-    id
-    thread_key
-    comments {
+    affectedRows
+    returning {
       id
+      threadKey
+      metadata
+      createdAt
+      resolved
+    }
+  }
+}
+```
+```graphql
+mutation insertComments(
+  $id: Uuid!,
+  $body: Jsonb!,
+  $userid: Uuid!
+  $threadid: Uuid!
+){
+  insertComments (
+    objects:[{
+      body: $body
+      userId: $userid
+      id: $id
+      threadId: $threadid
+    }]
+  ) {
+    affectedRows
+    returning{
       body
-      user {
-        id
-        name
-      }
+      id
     }
   }
 }
 ```
 
+<!-- ```graphql
+# mutation CreateThreadAndComment(
+#   $projectId: UUID!
+#   $threadKey: String!
+#   $userId: UUID
+#   $body: jsonb!
+#   $metadata: jsonb
+# ) {
+#   insert_threads_one(
+#     object: {
+#       project_id: $projectId
+#       thread_key: $threadKey
+#       metadata: $metadata
+#       comments: { data: { user_id: $userId, body: $body } }
+#     }
+#   ) {
+#     id
+#     thread_key
+#     comments {
+#       id
+#       body
+#       user {
+#         id
+#         name
+#       }
+#     }
+#   }
+# } -->
+```
+<!-- 
 2. Add Comment to Thread
 
 ```graphql
-mutation AddComment($threadId: UUID!, $userId: UUID, $body: jsonb!) {
-  insert_comments_one(
-    object: { thread_id: $threadId, user_id: $userId, body: $body }
-  ) {
-    id
-    body
-    user {
-      id
-      name
-    }
-  }
-}
+# mutation AddComment($threadId: UUID!, $userId: UUID, $body: jsonb!) {
+#   insert_comments_one(
+#     object: { thread_id: $threadId, user_id: $userId, body: $body }
+#   ) {
+#     id
+#     body
+#     user {
+#       id
+#       name
+#     }
+#   }
+# } -->
 ```
 
 3. Resolve Thread
 
 ```graphql
-mutation ResolveThread($threadId: UUID!) {
-  update_threads_by_pk(
-    pk_columns: { id: $threadId }
-    _set: { resolved: true }
+mutation ResolveThread(
+  $threadId: Uuid!, 
+) {
+  updateThreadsById(
+    keyId: $threadId,
+    updateColumns: {
+      resolved:{
+        set: true
+      }
+    }
   ) {
-    id
-    resolved
+    affectedRows
+    returning {
+      id
+      resolved
+    }
   }
 }
 ```
@@ -288,13 +368,15 @@ mutation ResolveThread($threadId: UUID!) {
 4. Delete Comment
 
 ```graphql
-mutation DeleteComment($commentId: UUID!) {
-  update_comments_by_pk(
-    pk_columns: { id: $commentId }
-    _set: { deleted_at: "now()" }
+mutation DeleteComment($commentId: Uuid!) {
+  deleteCommentsById(
+    keyId: $commentId
   ) {
-    id
-    deleted_at
+    affectedRows
+    returning {
+      id
+      deletedAt
+    }
   }
 }
 ```
@@ -302,18 +384,26 @@ mutation DeleteComment($commentId: UUID!) {
 5. Mark Notification as Read
 
 ```graphql
-mutation MarkNotificationAsRead($notificationId: UUID!) {
-  update_notifications_by_pk(
-    pk_columns: { id: $notificationId }
-    _set: { read: true }
+mutation MarkNotificationAsRead($notificationId: Uuid!) {
+  updateNotificationsById(
+    keyId: $notificationId,
+    updateColumns: {
+      read: {
+        set: true
+      }
+    }
   ) {
-    id
-    read
+    affectedRows
+    returning {
+      id
+      read
+    }
   }
 }
 ```
 
 ## Implementation Notes
+for supporting key features such as threaded discussions, mentions, and notifications.
 
 - Mentions should be automatically detected and processed from the comment body when creating or updating comments.
 - The system should parse the comment body for `@` mentions and create the appropriate entries in the `mentions` table.
@@ -322,4 +412,3 @@ mutation MarkNotificationAsRead($notificationId: UUID!) {
   - Other indexing recommendations - `project_members(project_id, user_id, role)`,  `project_members(user_id, role)`,  `comments(user_id, created_at)`
 - Implement proper access control to ensure users can only interact with threads and comments they have permission to view or modify.
 
-This structure provides a solid foundation for implementing a Liveblocks-like comments system in your console frontend, supporting the key features of threaded discussions, mentions, and notifications.
