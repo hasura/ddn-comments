@@ -393,5 +393,4 @@ for supporting key features such as threaded discussions, mentions, and notifica
 - Initially, use polling to simulate real-time updates. This can be extended to use GraphQL subscriptions in the future for true real-time functionality.
 - Ensure proper indexing on frequently queried fields (e.g., `thread_key`, `user_id`, `thread_id`) for optimal performance.
   - Other indexing recommendations - `project_members(project_id, user_id, role)`,  `project_members(user_id, role)`,  `comments(user_id, created_at)`
-- Implement proper access control to ensure users can only interact with threads and comments they have permission to view or modify.
 

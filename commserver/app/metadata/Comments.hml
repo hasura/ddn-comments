@@ -179,6 +179,9 @@ definition:
   graphql:
     selectMany:
       queryRootField: comments
+      subscription:
+        rootField: comments_sub
+        description: Subscribe to comments model
     selectUniques:
       - queryRootField: commentsById
         uniqueIdentifier:
@@ -187,6 +190,8 @@ definition:
     filterInputTypeName: CommentsFilterInput
     aggregate:
       queryRootField: commentsAggregate
+      subscription:
+        rootField: commentAggregate
 
 ---
 kind: ModelPermissions
@@ -197,6 +202,7 @@ definition:
     - role: admin
       select:
         filter: null
+        allowSubscriptions: true
     - role: user
       select:
         filter:
