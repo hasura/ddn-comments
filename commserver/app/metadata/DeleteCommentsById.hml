@@ -59,7 +59,22 @@ definition:
   graphql:
     rootFieldName: deleteCommentsById
     rootFieldKind: Mutation
-  description: Delete any row on the 'comments' collection using the 'id' key
+  description: |
+    ## Sample Mutation Code - run this in GraphiQL to
+    Delete any row on the 'comments' collection using the 'id' key
+    ```graphql
+    mutation DeleteComment($commentId: Uuid!) {
+      deleteCommentsById(
+        keyId: $commentId
+      ) {
+        affectedRows
+        returning {
+          id
+          deletedAt
+        }
+      }
+    }
+    ```
 
 ---
 kind: CommandPermissions

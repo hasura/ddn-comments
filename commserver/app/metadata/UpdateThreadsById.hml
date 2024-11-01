@@ -325,7 +325,29 @@ definition:
   graphql:
     rootFieldName: updateThreadsById
     rootFieldKind: Mutation
-  description: Update any row on the 'threads' collection using the 'id' key
+  description: |
+    ## Sample Mutation Code - run this in GraphiQL to
+    Update any row on the 'threads' collection using the 'id' key
+      ```graphql
+      mutation ResolveThread(
+        $threadId: Uuid!, 
+      ) {
+        updateThreadsById(
+          keyId: $threadId,
+          updateColumns: {
+            resolved:{
+              set: true
+            }
+          }
+        ) {
+          affectedRows
+          returning {
+            id
+            resolved
+          }
+        }
+      }
+      ```
 
 ---
 kind: CommandPermissions

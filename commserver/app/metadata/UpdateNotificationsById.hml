@@ -327,7 +327,27 @@ definition:
   graphql:
     rootFieldName: updateNotificationsById
     rootFieldKind: Mutation
-  description: Update any row on the 'notifications' collection using the 'id' key
+  description: |
+    ## Sample Mutation Code - run this in GraphiQL to
+    Update any row on the 'notifications' collection using the 'id' key
+    ```graphql
+    mutation MarkNotificationAsRead($notificationId: Uuid!) {
+      updateNotificationsById(
+        keyId: $notificationId,
+        updateColumns: {
+          read: {
+            set: true
+          }
+        }
+      ) {
+        affectedRows
+        returning {
+          id
+          read
+        }
+      }
+    }
+    ```
 
 ---
 kind: CommandPermissions
