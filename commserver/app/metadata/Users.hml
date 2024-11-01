@@ -27,7 +27,6 @@ definition:
         email:
           column:
             name: email
-            depr
         id:
           column:
             name: id
