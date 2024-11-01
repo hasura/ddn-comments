@@ -166,6 +166,7 @@ query GetThreads($projectId: Uuid, $resolved: Bool) {
     threadKey
     resolved
     metadata
+    createdAt
     comments(order_by: { createdAt: Asc }) {
       id
       body
@@ -178,6 +179,7 @@ query GetThreads($projectId: Uuid, $resolved: Bool) {
         avatarUrl
       }
       mentions {
+        createdAt
         user {
           id
           name
