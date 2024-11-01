@@ -125,7 +125,10 @@ erDiagram
 
 1. Git Clone this repo: https://github.com/hasura/ddn-comments.git and cd into `ddn-comments/commserver`
    
-2. Using the `up.sql' and 'postgresql_seed.sql' files set up a PostgreSQL database. Can use sample [Neon Db](https://neon.tech/) to do that.
+2. Using the `up.sql' and 'postgresql_seed.sql' files set up a PostgreSQL database.
+
+   - You can check out [DDN Postgres connector documentation](https://hasura.io/docs/3.0/connectors/postgresql/local-postgres) to set up a Postgres Database locally to test this schema out. 
+   - Or you can use sample [Neon Db](https://neon.tech/) and provide that URL in step 3 below.
    
 3. Change the value for `APP_MY_CONNECTOR_CONNECTION_URI` in files `commserver/.env` and `commserver/.env.cloud`
 
@@ -134,12 +137,12 @@ erDiagram
    ddn supergraph build local 
 ```
 
-5. Run Docker. For local development, Hasura runs several services (engine, connectors, auth, etc.), which use the following ports: 3000, 4317 and so on. Please ensure these ports are available. If not, modify the published ports in the Docker Compose files from this repository accordingly.
+1. Run Docker. For local development, Hasura runs several services (engine, connectors, auth, etc.), which use the following ports: 3000, 4317 and so on. Please ensure these ports are available. If not, modify the published ports in the Docker Compose files from this repository accordingly.
 ```shell 
    ddn run docker-start
 ```
 
-6. Check out the console to discover and test the GraphQL API 
+1. Check out the console to discover and test the GraphQL API 
 ```shell 
    ddn console --local
 ``` 
@@ -295,36 +298,6 @@ mutation insertComments(
 }
 ```
 
-<!-- ```graphql
-# mutation CreateThreadAndComment(
-#   $projectId: UUID!
-#   $threadKey: String!
-#   $userId: UUID
-#   $body: jsonb!
-#   $metadata: jsonb
-# ) {
-#   insert_threads_one(
-#     object: {
-#       project_id: $projectId
-#       thread_key: $threadKey
-#       metadata: $metadata
-#       comments: { data: { user_id: $userId, body: $body } }
-#     }
-#   ) {
-#     id
-#     thread_key
-#     comments {
-#       id
-#       body
-#       user {
-#         id
-#         name
-#       }
-#     }
-#   }
-# } -->
-```
-
 3. Resolve Thread
 
 ```graphql
@@ -385,12 +358,36 @@ mutation MarkNotificationAsRead($notificationId: Uuid!) {
 }
 ```
 
+### Subscriptions
+
+We want to know what are the threads that are associated with this project and what comments they have. 
+This way we will be able to show it on the notifications tab and comment bubbles. 
+![alt text](commentssub.png)
+
+1. Subscription on Threads
+
+```graphql
+ssubscription Threads ($projectID: Uuid!) {
+  threads(where: {project: {id: {_eq: $projectID}}}) {
+    comments {
+      body
+      id
+    }
+    id
+    createdAt
+    threadKey
+  }
+}
+
+{
+  "projectID":"fe7a8c51-0d50-4f41-b033-e0c3c49a4dec"
+}
+```
+
 ## Implementation Notes
 for supporting key features such as threaded discussions, mentions, and notifications.
 
 - Mentions should be automatically detected and processed from the comment body when creating or updating comments.
 - The system should parse the comment body for `@` mentions and create the appropriate entries in the `mentions` table.
-- Initially, use polling to simulate real-time updates. This can be extended to use GraphQL subscriptions in the future for true real-time functionality.
 - Ensure proper indexing on frequently queried fields (e.g., `thread_key`, `user_id`, `thread_id`) for optimal performance.
   - Other indexing recommendations - `project_members(project_id, user_id, role)`,  `project_members(user_id, role)`,  `comments(user_id, created_at)`
-

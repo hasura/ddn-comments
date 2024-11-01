@@ -125,8 +125,31 @@ definition:
   graphql:
     rootFieldName: insertComments
     rootFieldKind: Mutation
-  description: Insert into the comments table
-
+  description: |
+    ## Sample Mutation Code - run this in GraphiQL
+      ```graphql
+    mutation insertComments(
+      $id: Uuid!,
+      $body: Jsonb!,
+      $userid: Uuid!
+      $threadid: Uuid!
+    ){
+      insertComments (
+        objects:[{
+          body: $body
+          userId: $userid
+          id: $id
+          threadId: $threadid
+        }]
+      ) {
+        affectedRows
+        returning{
+          body
+          id
+        }
+      }
+    }
+    ```
 ---
 kind: CommandPermissions
 version: v1

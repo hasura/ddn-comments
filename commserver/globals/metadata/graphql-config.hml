@@ -33,4 +33,4 @@ definition:
   mutation:
     rootOperationTypeName: Mutation
   subscription:
-    rootOperationTypeName: subscriptioncomments
+    rootOperationTypeName: Subscription

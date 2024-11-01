@@ -165,6 +165,9 @@ definition:
   graphql:
     selectMany:
       queryRootField: threads
+      subscription:
+        rootField: threads
+        description: Subscribe to threads model
     selectUniques:
       - queryRootField: threadsById
         uniqueIdentifier:
@@ -187,6 +190,7 @@ definition:
     - role: admin
       select:
         filter: null
+        allowSubscriptions: true
     - role: user
       select:
         filter:

@@ -180,7 +180,7 @@ definition:
     selectMany:
       queryRootField: comments
       subscription:
-        rootField: comments_sub
+        rootField: comments
         description: Subscribe to comments model
     selectUniques:
       - queryRootField: commentsById
@@ -192,6 +192,49 @@ definition:
       queryRootField: commentsAggregate
       subscription:
         rootField: commentAggregate
+  description: |
+    # Cart Items Model Configuration
+    
+    ## Query Capabilities
+    This model configuration enables the following operations:
+    - Individual cart item lookups by ID
+    - Bulk cart item queries with filtering
+    - Aggregation queries for cart analysis
+    
+    ## Filtering Support
+    Supports filtering on all fields including:
+    - `cartId` for cart-specific items
+    - `productId` for product presence checks
+    - `quantity` for inventory analysis
+    - `createdAt`/`updatedAt` for time-based queries
+    
+    ## Ordering
+    Enables sorting by:
+    - Creation/update timestamps
+    - Quantity (useful for inventory reports)
+    - Cart/Product IDs (for relationship-based sorting)
+    
+    ## Common Query Patterns
+    ```graphql
+    # Get all items in a specific cart
+    query {
+      cartItems(where: { cartId: { _eq: "uuid" }}) {
+        product {
+          name
+          price
+        }
+        quantity
+      }
+    }
+    
+    # Get abandoned cart items
+    query {
+      cartItems(where: {
+        updatedAt: { _lt: "timestamp" },
+        cart: { status: { _eq: "ACTIVE" }}
+      })
+    }
+    ```
 
 ---
 kind: ModelPermissions
