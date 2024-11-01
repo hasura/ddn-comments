@@ -8,6 +8,8 @@ definition:
       type: Text
     - name: email
       type: Varchar!
+      deprecated:
+        reason: not used
     - name: id
       type: Uuid!
     - name: name
@@ -25,6 +27,7 @@ definition:
         email:
           column:
             name: email
+            depr
         id:
           column:
             name: id

@@ -119,7 +119,34 @@ definition:
   graphql:
     rootFieldName: insertThreads
     rootFieldKind: Mutation
-  description: Insert into the threads table
+  description: |
+    ## Sample Mutation Code - run this in GraphiQL to insert a thread
+      ```graphql
+    mutation CreateThread(
+      $id: Uuid!,
+      $projectId: Uuid!,
+      $threadKey: Varchar!,
+      $metadata: Jsonb
+    ) {
+      insertThreads(
+        objects: [{
+          id: $id,
+          projectId: $projectId,
+          threadKey: $threadKey,
+          metadata: $metadata
+        }]
+      ) {
+        affectedRows
+        returning {
+          id
+          threadKey
+          metadata
+          createdAt
+          resolved
+        }
+      }
+    }
+    ```
 
 ---
 kind: CommandPermissions
