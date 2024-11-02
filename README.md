@@ -1,10 +1,32 @@
-# Comments System Design
+# Table of Contents
 
-## Overview
+- [Table of Contents](#table-of-contents)
+- [Commenting DDN Server](#commenting-ddn-server)
+  - [Comments System Design](#comments-system-design)
+    - [Overview](#overview)
+    - [Entity Relationship Diagram](#entity-relationship-diagram)
+    - [Features](#features)
+    - [Other Features Possible with this schema](#other-features-possible-with-this-schema)
+  - [Setup Instructions](#setup-instructions)
+  - [GraphQL Queries and Mutations](#graphql-queries-and-mutations)
+    - [Queries](#queries)
+    - [Mutations](#mutations)
+    - [Subscriptions](#subscriptions)
+  - [Implementation Notes](#implementation-notes)
 
-This document outlines the design for a Liveblocks-like comments system for DDN. The system supports threaded comments, mentions, notifications, and both anonymous and authenticated users.
+# Commenting DDN Server 
 
-## Mermaid Diagram
+Unlocks collaboration in your application by closing feedback loops with consumers
+
+## Comments System Design
+
+### Overview
+
+This document outlines the design for a Liveblocks.io or  Velt like comments system built on DDN. The system supports threaded comments, mentions, notifications, and both anonymous and authenticated users.
+
+![alt text](commintro.png)
+
+### Entity Relationship Diagram
 
 ```mermaid
 erDiagram
@@ -74,14 +96,13 @@ erDiagram
     }
 ```
 
-## Features
+### Features
 
 1. **Threaded Comments**: Comments are organized into threads, each associated with a specific project and identified by a unique `thread_key`.
    - `threads` table with `project_id` and `thread_key`
    - `comments` table with `thread_id` for organization
 
-2. **Anonymous and Authenticated Comments**: The system supports both anonymous and authenticated comments.
-    - Consider adding permission checks using `project_members` roles
+2. **Real-time Updates**: Initially implemented using polling, with the possibility to extend to GraphQL subscriptions in the future.
 
 3. **Mentions**: Users can be mentioned in comments using the `@` symbol. Mentions are automatically detected and processed from the comment body.
       - Consider restricting mentions to only project members
@@ -90,35 +111,32 @@ erDiagram
 4. **Notifications**: Users receive notifications when they are mentioned in a comment or when there's activity in a thread they're participating in.
      - Links users, threads, and comments effectively
 
-5. **Thread Resolution**: Threads can be marked as resolved, allowing for easy management of discussions.
-- Consider adding role-based resolution permissions
-
-6. **Comment Deletion**: Comments can be soft-deleted, maintaining the integrity of the conversation while allowing for content moderation.
- - Enables soft deletion while maintaining thread integrity
-
-7. **Real-time Updates**: Initially implemented using polling, with the possibility to extend to GraphQL subscriptions in the future.
-
-8. **Project Access Control**
+5. **Project Access Control**
    - Only project members can view/create threads
    - Different capabilities based on role (owner/admin/member)
    - Enforced through `project_members` table checks
 
+6. **Thread Resolution**: Threads can be marked as resolved, allowing for easy management of discussions.
+- Consider adding role-based resolution permissions
+
+7. **Comment Deletion**: Comments can be soft-deleted, maintaining the integrity of the conversation while allowing for content moderation.
+ - Enables soft deletion while maintaining thread integrity
+
+8. **Anonymous and Authenticated Comments**: The system supports both anonymous and authenticated comments.
+  - Consider adding permission checks using `project_members` roles
+
+
 ### Other Features Possible with this schema
 
-1. **Role-Based Permissions**
-   - Control thread creation based on project role. Restrict thread resolution to owners/admins
+1. **Role-Based Permissions** Control thread creation based on project role. Restrict thread resolution to owners/admins
 
-2.  **Member-Only Mentions**
-    - Restrict @mentions to current project members. Prevent mentions of users outside the project
+2.  **Member-Only Mentions** Restrict @mentions to current project members. Prevent mentions of users outside the project
 
-3.  **Project Activity Dashboard**
-    - Track member participation and engagement. Monitor thread creation/resolution by role
+3.  **Project Activity Dashboard** Track member participation and engagement. Monitor thread creation/resolution by role
 
-4.  **Thread Visibility Control**
-    - Private threads visible only to specific roles. Confidential discussions limited to admins/owners
+4.  **Thread Visibility Control** Private threads visible only to specific roles. Confidential discussions limited to admins/owners
 
-5.  **Role-Based Notifications**
-    - Notify all admins of new threads. Alert owners of unresolved threads. 
+5.  **Role-Based Notifications** Notify all admins of new threads. Alert owners of unresolved threads. 
 
 
 ## Setup Instructions
