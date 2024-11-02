@@ -147,7 +147,7 @@ erDiagram
 
    - You can check out [DDN Postgres connector documentation](https://hasura.io/docs/3.0/connectors/postgresql/local-postgres) to set up a Postgres Database locally to test this schema out. 
    - Or you can use sample [Neon Db](https://neon.tech/) and provide that URL in step 3 below.
-     - Here is a [sample db](postgresql://rahul.agarwal@ep-flat-bird-897996.us-east-2.aws.neon.tech/hardy-reindeer-37_db?sslmode=require) for you to use to run this demo.
+     - Here is a sample db -  `postgresql://rahul.agarwal@ep-flat-bird-897996.us-east-2.aws.neon.tech/hardy-reindeer-37_db?sslmode=require` for you to use to run this demo.
    
 3. Change the value for `APP_MY_CONNECTOR_CONNECTION_URI` in files `commserver/.env` and `commserver/.env.cloud`
 
