@@ -146,6 +146,27 @@ definition:
         }
       }
     }
+    
+    name: InsertThreadsObject
+    fields:
+      - name: createdAt
+        type: Timestamptz
+      - name: id
+        type: Uuid!
+      - name: metadata
+        type: Jsonb
+      - name: projectId
+        type: Uuid!
+      - name: resolved
+        type: Bool
+      - name: threadKey
+        type: Varchar!
+    graphql:
+      typeName: InsertThreadsObject
+      inputTypeName: InsertThreadsObjectInput
+    dataConnectorTypeMapping:
+      - dataConnectorName: my_connector
+        dataConnectorObjectType: insert_threads_object
     ```
 
 ---

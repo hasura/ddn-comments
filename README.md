@@ -164,13 +164,14 @@ erDiagram
 ```shell 
    ddn supergraph build local 
 ```
+3b. Y if context pop up comes on the CLI
 
-1. Run Docker. For local development, Hasura runs several services (engine, connectors, auth, etc.), which use the following ports: 3000, 4317 and so on. Please ensure these ports are available. If not, modify the published ports in the Docker Compose files from this repository accordingly.
+4. Run Docker. For local development, Hasura runs several services (engine, connectors, auth, etc.), which use the following ports: 3000, 4317 and so on. Please ensure these ports are available. If not, modify the published ports in the Docker Compose files from this repository accordingly.
 ```shell 
    ddn run docker-start
 ```
 
-1. Check out the console to discover and test the GraphQL API 
+5. Check out the console to discover and test the GraphQL API 
 ```shell 
    ddn console --local
 ``` 
