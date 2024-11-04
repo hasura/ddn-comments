@@ -148,17 +148,19 @@ erDiagram
 ## Setup Instructions
 
 1. Git Clone this repo: https://github.com/hasura/ddn-comments.git and cd into `ddn-comments/commserver`
+    - Follow these instructions if you would like to start from scratch using your own database
+      https://hasura.io/docs/3.0/getting-started/with-postgresql 
    
-2. Using the `up.sql' and 'postgresql_seed.sql' files set up a PostgreSQL database.
+1. Using the `up.sql' and 'postgresql_seed.sql' files set up a PostgreSQL database.
 
    - You can check out [DDN Postgres connector documentation](https://hasura.io/docs/3.0/connectors/postgresql/local-postgres) to set up a Postgres Database locally to test this schema out.
      - Hasura CLI automatically creates DDN metadata based on the underlying database schema information.
    - Or you can use sample [Neon Db](https://neon.tech/) and provide that URL in step 3 below.
-     - Here is a sample db -  `postgresql://rahul.agarwal@ep-flat-bird-897996.us-east-2.aws.neon.tech/hardy-reindeer-37_db?sslmode=require` for you to use to run this demo.
+     - Here is a sample db -  `postgres://hasura_role_93a458ce-b22a-484e-afe2-3393e65e31a3:uk7TqdsIwiQ8@snowy-bonus-642199.us-east-2.aws.neon.tech/trusty-lizard-43_db_368619?options=project%3Dsnowy-bonus-642199&sslmode=require` for you to use to run this demo.
    
-3. Change the value for `APP_MY_CONNECTOR_CONNECTION_URI` in files `commserver/.env` and `commserver/.env.cloud`
+2. Change the value for `APP_MY_CONNECTOR_CONNECTION_URI` in files `commserver/.env` and `commserver/.env.cloud`
 
-4. Build the supergraph locally using the following command 
+3. Build the supergraph locally using the following command 
 ```shell 
    ddn supergraph build local 
 ```
