@@ -370,6 +370,8 @@ definition:
 
 1. Get Threads for a Project
 
+Query Parameters,  Filtering, Sorting, Nested Relations, Field Selection
+
 ```graphql
 query GetThreads($projectId: Uuid, $resolved: Bool) {
   threads(
@@ -414,6 +416,8 @@ query GetThreads($projectId: Uuid, $resolved: Bool) {
 
 2. Get Users for Mentions
 
+Case-insensitive text search
+
 ```graphql
 query GetUsers($searchText: Varchar) {
   users(where: { name: { _ilike: $searchText } }) {
@@ -429,6 +433,8 @@ query GetUsers($searchText: Varchar) {
 ```
 
 3. Get Notifications for a User
+
+Required Query Parameters, Deeper Nested Levels - three levels deep in relationships: `notifications -> thread -> project`
 
 ```graphql
 query GetNotifications($userId: Uuid!) {
@@ -467,6 +473,8 @@ query GetNotifications($userId: Uuid!) {
 
 1. Create Thread and Initial Comment
 
+Data insertion, JSONB Data Type, Operation Feedback
+
 ```graphql
 mutation CreateThread(
   $id: Uuid!,
@@ -489,6 +497,21 @@ mutation CreateThread(
       metadata
       createdAt
       resolved
+    }
+  }
+}
+
+{
+  "variables": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "projectId": "a67e8400-e29b-41d4-a716-446655440123",
+    "threadKey": "thread_2024_001",
+    "metadata": {
+      "priority": "high",
+      "category": "bug",
+      "tags": ["frontend", "urgent"],
+      "browser": "chrome",
+      "version": "2.1.0"
     }
   }
 }
@@ -519,6 +542,8 @@ mutation insertComments(
 
 3. Resolve Thread
 
+Column-specific update syntax ( `set` operation to specify the new value), Record targeting by ID
+
 ```graphql
 mutation ResolveThread(
   $threadId: Uuid!, 
@@ -541,6 +566,8 @@ mutation ResolveThread(
 ```
 
 4. Delete Comment
+
+Soft Delete Pattern (Indicates this is using soft deletion (marking records as deleted with a timestamp) rather than hard deletion)
 
 ```graphql
 mutation DeleteComment($commentId: Uuid!) {
@@ -585,8 +612,10 @@ This way we will be able to show it on the notifications tab and comment bubbles
 
 1. Subscription on Threads
 
+Example of real-time data subscription, allows clients to receive live updates when data changes
+
 ```graphql
-ssubscription Threads ($projectID: Uuid!) {
+subscription Threads ($projectID: Uuid!) {
   threads(where: {project: {id: {_eq: $projectID}}}) {
     comments {
       body
