@@ -173,8 +173,10 @@ erDiagram
 
 5. Check out the console to discover and test the GraphQL API 
 ```shell 
-   ddn console --local
+   ddn console
 ``` 
+
+Go to explorer view. Make sure the engine url is 3000
 
 Follow [these instructions](https://github.com/hasura/ddn-sample-app?tab=readme-ov-file#deploy-to-ddn-cloud) to go to cloud.
 
