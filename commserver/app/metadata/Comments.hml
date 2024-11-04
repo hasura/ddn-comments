@@ -193,48 +193,73 @@ definition:
       subscription:
         rootField: commentAggregate
   description: |
-    # Cart Items Model Configuration
-    
+    # Comments Model Configuration
     ## Query Capabilities
     This model configuration enables the following operations:
-    - Individual cart item lookups by ID
-    - Bulk cart item queries with filtering
-    - Aggregation queries for cart analysis
-    
-    ## Filtering Support
-    Supports filtering on all fields including:
-    - `cartId` for cart-specific items
-    - `productId` for product presence checks
-    - `quantity` for inventory analysis
-    - `createdAt`/`updatedAt` for time-based queries
-    
-    ## Ordering
-    Enables sorting by:
-    - Creation/update timestamps
-    - Quantity (useful for inventory reports)
-    - Cart/Product IDs (for relationship-based sorting)
-    
-    ## Common Query Patterns
+    - Query multiple comments using `comments` root field
+    - Lookup individual comments by ID using `commentsById` 
+    - Subscribe to comment updates
+    - Perform aggregate operations via `commentsAggregate`
+
+    ## Field Ordering Support
+    The model supports sorting on the following fields:
+    - `body`
+    - `createdAt`
+    - `deletedAt`
+    - `id`  
+    - `threadId`
+    - `updatedAt`
+    - `userId`
+
+    All fields support both ascending and descending order directions.
+
+    ## Filter Expression Types
+    - Base filter type: `CommentsBoolExp`
+    - Input filter type: `CommentsFilterInput`
+    - Ordering expression type: `CommentsOrderBy`
+
+    ## Data Source Configuration
+    - Connector: `my_connector`
+    - Collection: `comments`
+    - Aggregate expression type: `CommentsAggExp`
+
+    ## Example GraphQL Operations
     ```graphql
-    # Get all items in a specific cart
+    # Query comments with filtering
     query {
-      cartItems(where: { cartId: { _eq: "uuid" }}) {
-        product {
-          name
-          price
-        }
-        quantity
-      }
+    comments(where: {
+      threadId: { _eq: "123" }
+    }) {
+      body
+      createdAt
+      userId
     }
-    
-    # Get abandoned cart items
+    }
+
+    # Get comment by ID 
     query {
-      cartItems(where: {
-        updatedAt: { _lt: "timestamp" },
-        cart: { status: { _eq: "ACTIVE" }}
-      })
+    commentsById(id: "comment-id") {
+      body
+      threadId
+      userId
     }
-    ```
+    }
+
+    # Subscribe to comment updates
+    subscription {
+    comments {
+      id
+      body
+      updatedAt
+    }
+    }
+
+    # Aggregate comments data
+    query {
+    commentsAggregate {
+      count
+    }
+    }
 
 ---
 kind: ModelPermissions

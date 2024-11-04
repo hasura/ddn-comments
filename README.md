@@ -8,10 +8,16 @@
     - [Features](#features)
     - [Other Features Possible with this schema](#other-features-possible-with-this-schema)
   - [Setup Instructions](#setup-instructions)
+  - [DDN Metadata Modeling](#ddn-metadata-modeling)
+    - [Models](#models)
+    - [Commands](#commands)
+    - [Relationships](#relationships)
+    - [Permissions](#permissions)
   - [GraphQL Queries and Mutations](#graphql-queries-and-mutations)
     - [Queries](#queries)
     - [Mutations](#mutations)
     - [Subscriptions](#subscriptions)
+  - [REST API](#rest-api)
   - [Implementation Notes](#implementation-notes)
 
 # Commenting DDN Server 
@@ -145,7 +151,8 @@ erDiagram
    
 2. Using the `up.sql' and 'postgresql_seed.sql' files set up a PostgreSQL database.
 
-   - You can check out [DDN Postgres connector documentation](https://hasura.io/docs/3.0/connectors/postgresql/local-postgres) to set up a Postgres Database locally to test this schema out. 
+   - You can check out [DDN Postgres connector documentation](https://hasura.io/docs/3.0/connectors/postgresql/local-postgres) to set up a Postgres Database locally to test this schema out.
+     - Hasura CLI automatically creates DDN metadata based on the underlying database schema information.
    - Or you can use sample [Neon Db](https://neon.tech/) and provide that URL in step 3 below.
      - Here is a sample db -  `postgresql://rahul.agarwal@ep-flat-bird-897996.us-east-2.aws.neon.tech/hardy-reindeer-37_db?sslmode=require` for you to use to run this demo.
    
@@ -167,6 +174,192 @@ erDiagram
 ``` 
 
 Follow [these instructions](https://github.com/hasura/ddn-sample-app?tab=readme-ov-file#deploy-to-ddn-cloud) to go to cloud.
+
+## DDN Metadata Modeling
+
+Hasura DDN uses a code-first, semantic metadata layer to centralize your data definitions, relationships, and permissions in one place.
+
+### Models
+
+Models represent the entities — such as tables, views, or collections — in your data source, defining the structure and how the data can be accessed.
+
+```yaml
+---
+kind: Model
+version: v1
+definition:
+  name: Comments
+  objectType: Comments
+  source:
+    dataConnectorName: my_connector
+    collection: comments
+  filterExpressionType: CommentsBoolExp
+  aggregateExpression: CommentsAggExp
+  orderableFields:
+    - fieldName: body
+      orderByDirections:
+        enableAll: true
+    - fieldName: createdAt
+      orderByDirections:
+        enableAll: true
+    - fieldName: deletedAt
+      orderByDirections:
+        enableAll: true
+    - fieldName: id
+      orderByDirections:
+        enableAll: true
+    - fieldName: threadId
+      orderByDirections:
+        enableAll: true
+    - fieldName: updatedAt
+      orderByDirections:
+        enableAll: true
+    - fieldName: userId
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: comments
+      subscription:
+        rootField: comments
+        description: Subscribe to comments model
+    selectUniques:
+      - queryRootField: commentsById
+        uniqueIdentifier:
+          - id
+    orderByExpressionType: CommentsOrderBy
+    filterInputTypeName: CommentsFilterInput
+    aggregate:
+      queryRootField: commentsAggregate
+      subscription:
+        rootField: commentAggregate
+```
+
+### Commands
+
+Commands enable you to perform actions that modify data — such a perform updates or inserts — in your data source. Commands also allow you to execute custom business logic directly via your API.
+
+```yaml
+kind: Command
+version: v1
+definition:
+  name: InsertComments
+  outputType: InsertCommentsResponse!
+  arguments:
+    - name: objects
+      type: "[InsertCommentsObject!]!"
+    - name: postCheck
+      type: CommentsBoolExp
+      description: Insert permission predicate over the 'comments' collection
+  source:
+    dataConnectorName: my_connector
+    dataConnectorCommand:
+      procedure: insert_comments
+    argumentMapping:
+      objects: objects
+      postCheck: post_check
+  graphql:
+    rootFieldName: insertComments
+    rootFieldKind: Mutation
+```
+
+### Relationships
+
+Relationships allow you to connect data, enabling you to query data across multiple entities.
+
+```yaml
+kind: Relationship
+version: v1
+definition:
+  name: user
+  sourceType: Comments
+  target:
+    model:
+      name: Users
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: userId
+      target:
+        modelField:
+          - fieldName: id
+```
+
+### Permissions
+
+Permissions allow you to control who can access your data and what they can do with it. You can define permissions to restrict access to certain models, the fields they contain, and the operations that can be performed on them.
+
+To restrict which fields can be queried, you can create a permission for a type.
+
+```yaml
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Comments
+  permissions:
+    - role: user
+      output:
+        allowedFields:
+          - id
+          - threadId
+          - userId
+          - body
+    - role: anonymous
+      output:
+        allowedFields:
+          - body
+```
+
+To implement row-level security, you can create a permission for a model.
+```yaml
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Comments
+  permissions:
+    - role: admin
+      select:
+        filter: null
+        allowSubscriptions: true
+    - role: user
+      select:
+        filter:
+          relationship:
+            name: thread
+            predicate:
+              relationship:
+                name: project
+                predicate:
+                  relationship:
+                    name: projectMembers
+                    predicate:
+                      fieldComparison:
+                        field: userId
+                        operator: _eq
+                        value:
+                          sessionVariable: x-hasura-user-id
+```
+To determine which operations can be performed by which roles, you can create a permission for a command.
+
+```yaml
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: InsertComments
+  permissions:
+    - role: admin
+      allowExecution: true
+    - role: user
+      allowExecution: true
+      argumentPresets:
+        - argument: objects
+          value:
+            literal:
+              - userId:
+                  sessionVariable: x-hasura-user-id
+```
+
 
 ## GraphQL Queries and Mutations
 
@@ -406,6 +599,13 @@ ssubscription Threads ($projectID: Uuid!) {
   "projectID":"fe7a8c51-0d50-4f41-b033-e0c3c49a4dec"
 }
 ```
+## REST API
+
+ DDN also supports JSON API as output. The feature is out in experimental phase.
+  Run the following command to  fetch the openapi JSON file. An example of the swagger file is shown here.
+```shel
+  curl http://localhost:3000/v1/rest/__schema > comments_openapi.json
+  ```
 
 ## Implementation Notes
 for supporting key features such as threaded discussions, mentions, and notifications.
