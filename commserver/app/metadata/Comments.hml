@@ -190,7 +190,7 @@ definition:
     filterInputTypeName: CommentsFilterInput
     aggregate:
       queryRootField: commentsAggregate
-      subscription:
+    subscription:
         rootField: commentAggregate
   description: |
     # Comments Model Configuration
