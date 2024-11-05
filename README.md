@@ -612,8 +612,8 @@ mutation MarkNotificationAsRead($notificationId: Uuid!) {
 ### Subscriptions
 
 We want to know what are the threads that are associated with this project and what comments they have. 
-This way we will be able to show it on the notifications tab and comment bubbles. 
-![alt text](commentssub.png)
+This way we will be able to show it on the notifications tab and comment bubbles. <br>
+![alt text](commentssub.png)<br>
 
 1. Subscription on Threads
 
