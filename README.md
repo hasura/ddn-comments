@@ -318,6 +318,8 @@ definition:
 ```
 
 To implement row-level security, you can create a permission for a model.
+This metadata defines permissions for a "Comments" model, where admins can access all comments while regular users can only access comments in threads of projects where they are project members (verified by matching their user ID against the project's member list). This creates a hierarchical access control that ensures users can only see comments within their authorized project scope.
+
 ```yaml
 kind: ModelPermissions
 version: v1
