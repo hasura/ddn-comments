@@ -30,7 +30,8 @@ Unlocks collaboration in your application by closing feedback loops with consume
 
 This document outlines the design for a Liveblocks.io or  Velt like comments system built on DDN. The system supports threaded comments, mentions, notifications, and both anonymous and authenticated users.
 
-![alt text](commintro.png)
+<!-- ![alt text](commintro.png) -->
+  <img src="commintro.png" height="450" alt="alt text"><br>
 
 ### Entity Relationship Diagram
 
